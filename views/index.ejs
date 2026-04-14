@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fi">
+<%- include('partials/head') %>
+
+    <div class="content-wrapper">
+        <%- include('partials/header') %>
+            <%- include('partials/nav') %>
+
+                <main class="container">
+                    <div class="welcome-section">
+                        <h2>Tervetuloa!</h2>
+                        <p>Mitä tänään haluaisit puuhailla?</p>
+                    </div>
+
+                    <section class="quick-actions">
+                        <a href="/asiakkaat" class="action-card">
+                            <span class="icon">👥</span>
+                            <h3>Asiakkaat</h3>
+                            <p>Hallitse asiakastietoja</p>
+                        </a>
+
+                        <a href="/laskut" class="action-card">
+                            <span class="icon">💶</span>
+                            <h3>Laskut</h3>
+                            <p>Seuraa maksutilannetta</p>
+                        </a>
+
+                        <a href="/tarvikkeet" class="action-card">
+                            <span class="icon">📦</span>
+                            <h3>Tarvikkeet</h3>
+                            <p>Varasto ja osat</p>
+                        </a>
+
+                        <a href="/toimittajat" class="action-card">
+                            <span class="icon">🚚</span>
+                            <h3>Toimittajat</h3>
+                            <p>Tukkuliikkeet ja hankinnat</p>
+                        </a>
+
+                        <a href="/tyokohteet" class="action-card">
+                            <span class="icon">🏠</span>
+                            <h3>Työkohteet</h3>
+                            <p>Selaa asennuskohteita</p>
+                        </a>
+
+                        <a href="/tyossopimukset" class="action-card">
+                            <span class="icon">📜</span>
+                            <h3>Työsopimukset</h3>
+                            <p>Urakoitsijat ja sopimukset</p>
+                        </a>
+
+                    </section>
+                </main>
+    </div>
+
+    <%- include('partials/footer') %>
+
+        </body>
+
+</html>

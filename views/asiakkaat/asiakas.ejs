@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fi">
+<%- include('../partials/head') %>
+<body>
+    <div class="content-wrapper">
+        <%- include('../partials/header') %>
+        <%- include('../partials/nav') %>
+
+        <main class="container">
+    <div class="breadcrumb">
+        <a href="/asiakkaat">← Takaisin listaan</a>
+    </div>
+
+    <section class="info-card main-form-section">
+        <h2>Muokkaa asiakasta</h2>
+        <form action="/asiakkaat/paivita/<%= asiakas.id %>" method="POST">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Nimi</label>
+                    <input type="text" name="nimi" value="<%= asiakas.nimi %>">
+                </div>
+                <div class="form-group">
+                    <label>Osoite</label>
+                    <input type="text" name="osoite" value="<%= asiakas.osoite %>">
+                </div>
+                <div class="form-group">
+                    <label>Sähköposti</label>
+                    <input type="email" name="email" value="<%= asiakas.email %>">
+                </div>
+                <div class="form-group">
+                    <label>Puhelinnumero</label>
+                    <input type="text" name="puhelinnumero" value="<%= asiakas.puhelinnumero %>">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Tallenna muutokset</button>
+            </div>
+        </form>
+    </section>
+
+    <div class="bottom-sections">
+        <section class="data-card">
+            <h3>Avoimet laskut</h3>
+            <p class="muted-text">Ei avoimia laskuja</p>
+        </section>
+        
+        <section class="data-card">
+            <div class="card-header">
+                <h3>Työkohteet</h3>
+                <button class="btn-small">+ Lisää työkohde</button>
+            </div>
+            <p class="muted-text">Ei rekisteröityjä kohteita</p>
+        </section>
+    </div>
+</main>
+    </div>
+    <%- include('../partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fi">
+<%- include('../partials/head') %>
+
+    <body>
+        <div class="content-wrapper">
+            <%- include('../partials/header') %>
+                <%- include('../partials/nav') %>
+
+                    <main class="container">
+                        <div class="page-header">
+                            <h2>Tarvikkeet</h2>
+                            <button id="openModal" class="btn-primary">+ Lisää uusi lasku</button>
+                        </div>
+
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Tunnus</th>
+                                    <th>Asiakas</th>
+                                    <th>Työkohde</th>
+                                    <th>Päivämäärä</th>
+                                    <th>Eräpäivä</th>
+                                    <th>Summa</th>
+                                    <th>Maksettu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+
+                        <div id="customerModal" class="modal">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3>Lisää uusi lasku</h3>
+                                    <span class="close-btn">&times;</span>
+                                </div>
+                                <form action="/tarvikkeet/lisaa" method="POST">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label>Nimi</label>
+                                            <input type="text" name="nimi" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Osoite</label>
+                                            <input type="text" name="osoite" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Sähköposti</label>
+                                            <input type="email" name="email" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Puhelinnumero</label>
+                                            <input type="text" name="puhelinnumero" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="button" class="btn-primary btn-cancel close-btn">Peruuta</button>
+                                        <button type="submit" class="btn-primary">Tallenna asiakas</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </main>
+        </div>
+        <%- include('../partials/footer') %>
+    </body>
+<script>
+    const modal = document.getElementById("customerModal");
+    const openBtn = document.getElementById("openModal");
+    const closeBtns = document.querySelectorAll(".close-btn");
+
+    // Avaa ikkuna
+    openBtn.onclick = () => modal.style.display = "block";
+
+    // Sulje ikkuna ruksista tai peruuta-namiskasta
+    closeBtns.forEach(btn => {
+        btn.onclick = () => modal.style.display = "none";
+    });
+</script>
+</html>
