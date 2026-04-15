@@ -25,7 +25,34 @@ async function initDb() {
       puhelinnro TEXT,
       sahkoposti TEXT,
       osoite TEXT NOT NULL
-    )
+    );
+
+    CREATE TABLE IF NOT EXISTS tyokohde (
+      tyokohde_id SERIAL PRIMARY KEY,
+      nimi TEXT NOT NULL,
+      osoite TEXT NOT NULL,
+      asiakas_id INTEGER REFERENCES asiakas(asiakas_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS lasku (
+      lasku_id SERIAL PRIMARY KEY,
+      kokonaissumma NUMERIC,
+      paivamaara DATE,
+      erapaiva DATE,
+      maksettu BOOLEAN DEFAULT false,
+      tila TEXT CHECK (tila IN ('kesken', 'valmis')),
+      edellinen_lasku INTEGER REFERENCES lasku(lasku_id),
+      laskunro INTEGER DEFAULT 1
+    );
+
+    CREATE TABLE IF NOT EXISTS tyosuorite (
+      tyosuorite_id SERIAL PRIMARY KEY,
+      asiakas_id INTEGER NOT NULL REFERENCES asiakas(asiakas_id),
+      tyokohde_id INTEGER NOT NULL REFERENCES tyokohde(tyokohde_id),
+      lasku_id INTEGER REFERENCES lasku(lasku_id),
+      urakkasopimus_id INTEGER,
+      tyyppi TEXT NOT NULL CHECK (tyyppi IN ('tunti', 'urakka'))
+    );
 
   `);
   console.log('Tables created or already exist.');
