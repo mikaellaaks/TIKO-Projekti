@@ -47,13 +47,51 @@
         <section class="data-card">
             <div class="card-header">
                 <h3>Työkohteet</h3>
-                <button class="btn-small">+ Lisää työkohde</button>
+                <button id="openTyokohdeModal" class="btn-small">+ Lisää työkohde</button>
             </div>
             <p class="muted-text">Ei rekisteröityjä kohteita</p>
         </section>
     </div>
 </main>
     </div>
+
+        <!-- Työkohde Modal -->
+    <div id="tyokohdeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Lisää uusi työkohde</h3>
+                <span class="close-btn">&times;</span>
+            </div>
+            <form action="/tyokohteet/lisaa" method="POST">
+                <input type="hidden" name="asiakas_id" value="<%= asiakas.id %>">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nimi</label>
+                        <input type="text" name="nimi" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Osoite</label>
+                        <input type="text" name="osoite" required>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-primary btn-cancel close-btn">Peruuta</button>
+                    <button type="submit" class="btn-primary">Tallenna</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <%- include('../partials/footer') %>
+    
+    <script>
+        const modal = document.getElementById("tyokohdeModal");
+        const openBtn = document.getElementById("openTyokohdeModal");
+        const closeBtns = document.querySelectorAll(".close-btn");
+
+        openBtn.onclick = () => modal.style.display = "block";
+        closeBtns.forEach(btn => {
+            btn.onclick = () => modal.style.display = "none";
+        });
+    </script>
 </body>
 </html>
