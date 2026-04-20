@@ -40,3 +40,8 @@ export async function add(data: Omit<Tyokohde, 'tyokohde_id'>): Promise<Tyokohde
   );
   return rows[0] as Tyokohde;
 }
+
+// Poista työkohde ID:n perusteella
+export async function remove(id: number): Promise<void> {
+    await pool.query('DELETE FROM tyokohde WHERE tyokohde_id = $1', [id]);
+}

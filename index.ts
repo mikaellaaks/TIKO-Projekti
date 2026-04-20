@@ -21,6 +21,9 @@ app.set('views', path.join(rootDir, 'views'));
 // 2. Staattiset tiedostot
 app.use(express.static(path.join(rootDir, 'public')));
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 // 3. Reitit
 app.get('/', (req: Request, res: Response) => {
     res.render('index', { title: 'Etusivu' });

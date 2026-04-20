@@ -21,8 +21,10 @@
   },
   "homepage": "https://github.com/mikaellaaks/TIKO-Projekti#readme",
   "dependencies": {
+    "dotenv": "^17.4.2",
     "ejs": "^5.0.1",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "pg": "^8.20.0"
   },
   "devDependencies": {
     "@types/ejs": "^3.1.5",

@@ -312,6 +312,10 @@ footer {
     margin-right: 1rem;
 }
 
+.btn-delete {
+    background-color: #DC3545;
+}
+
 /* Käytetään samaa form-gridiä kuin muokkaussivulla */
 .modal .form-grid {
     display: grid;

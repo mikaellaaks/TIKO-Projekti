@@ -26,16 +26,16 @@
                                 <% asiakkaat.forEach(asiakas=> { %>
                                     <tr>
                                         <td><strong>
-                                                <%= asiakas.id %>
+                                                <%= asiakas.asiakas_id %>
                                             </strong></td>
                                         <td>
                                             <%= asiakas.nimi %>
                                         </td>
                                         <td>
-                                            <%= asiakas.email %>
+                                            <%= asiakas.sahkoposti %>
                                         </td>
                                         <td>
-                                            <a href="/asiakkaat/<%= asiakas.id %>" class="btn btn-edit">Avaa tiedot</a>
+                                            <a href="/asiakkaat/<%= asiakas.asiakas_id %>" class="btn btn-edit">Avaa tiedot</a>
                                         </td>
                                     </tr>
                                     <% }) %>
@@ -64,7 +64,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Puhelinnumero</label>
-                                            <input type="text" name="puhelinnumero" required>
+                                            <input type="text" name="puhelinnro" required>
                                         </div>
                                     </div>
                                     <div class="form-actions">
