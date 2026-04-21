@@ -26,3 +26,5 @@ router.get('/:id', async (req: Request, res: Response) => {
     tyosuorite: tyosuorite
   });
 });
+
+export default router;
