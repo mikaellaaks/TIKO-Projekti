@@ -45,12 +45,36 @@ async function initDb() {
       laskunro INTEGER DEFAULT 1
     );
 
+    CREATE TABLE IF NOT EXISTS urakkasopimus (
+      urakkasopimus_id SERIAL PRIMARY KEY,
+      asiakas_id INTEGER NOT NULL REFERENCES asiakas(asiakas_id),
+      tyokohde_id INTEGER NOT NULL REFERENCES tyokohde(tyokohde_id),
+      suunnittelu_tunnit NUMERIC DEFAULT 0,
+      tyo_tunnit NUMERIC DEFAULT 0,
+      alennus_prosentti NUMERIC DEFAULT 0,
+      hyvaksytty BOOLEAN DEFAULT false,
+      luotu_pvm TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS tarvike_historia (
+      historia_id SERIAL PRIMARY KEY,
+      alkuperainen_tarvike_id INTEGER,
+      nimi TEXT NOT NULL,
+      merkki TEXT,
+      yksikko TEXT,
+      sisaanostohinta NUMERIC,
+      myyntihinta NUMERIC,
+      alv NUMERIC,
+      toimittaja_id INTEGER REFERENCES toimittaja(toimittaja_id),
+      poistettu_pvm TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
     CREATE TABLE IF NOT EXISTS tyosuorite (
       tyosuorite_id SERIAL PRIMARY KEY,
       asiakas_id INTEGER NOT NULL REFERENCES asiakas(asiakas_id),
       tyokohde_id INTEGER NOT NULL REFERENCES tyokohde(tyokohde_id),
       lasku_id INTEGER REFERENCES lasku(lasku_id),
-      urakkasopimus_id INTEGER,
+      urakkasopimus_id INTEGER REFERENCES urakkasopimus(urakkasopimus_id),
       tyyppi TEXT NOT NULL CHECK (tyyppi IN ('tunti', 'urakka'))
     );
 
