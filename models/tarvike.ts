@@ -44,3 +44,14 @@ export async function getById(id: number): Promise<Tarvike | undefined> {
   );
   return rows[0];
 }
+
+// Vähennä tarvikkeen saldoa
+export async function decreaseStock(id: number, amount: number) {
+  const tarvike = await getById(id);
+  if (tarvike) {
+    await pool.query(
+      `UPDATE tarvike SET saldo = saldo - $1 WHERE tarvike_id = $2`,
+      [amount, id]
+    );
+  }
+}
