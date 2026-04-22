@@ -90,17 +90,6 @@ CREATE TABLE IF NOT EXISTS tyosuorite_tunti (
   alennus_prosentti NUMERIC DEFAULT 0
 );
 
-CREATE TABLE IF NOT EXISTS tyotyyppi (
-  tyotyyppi_id SERIAL PRIMARY KEY,
-  nimi TEXT NOT NULL CHECK (nimi IN ('suunnittelu', 'työ', 'aputyö')),
-  yksikkohinta NUMERIC NOT NULL
-);
-INSERT INTO tyotyyppi (nimi, yksikkohinta) VALUES 
-  ('suunnittelu', 55),
-  ('työ', 45),
-  ('aputyö', 35)
-ON CONFLICT DO NOTHING;
-
 CREATE TABLE IF NOT EXISTS tyosuorite_tarvike (
   suorite_tarvike_id SERIAL PRIMARY KEY,
   tyosuorite_id INTEGER NOT NULL REFERENCES tyosuorite(tyosuorite_id),
