@@ -17,8 +17,6 @@ export const listLaskut = async (req: Request, res: Response) => {
 export const getLaskuDetail = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    
-    //  laajennettu hakufunktio
     const lasku = await laskuModel.getFullLaskuDetails(id);
 
     if (!lasku) {
@@ -27,26 +25,54 @@ export const getLaskuDetail = async (req: Request, res: Response) => {
 
     const HINNAT = { suunnittelu: 55, työ: 45, aputyö: 35 };
 
-    // tuntien yhteissumma (Kotitalousvähennyskelpoinen osuus)
-    const tyonOsuus = lasku.tunnit.reduce((sum: number, t: any) => {
-      const hinta = HINNAT[t.tyyppi as keyof typeof HINNAT] || 0;
-      return sum + (t.maara * hinta);
-    }, 0);
+    let tyonOsuusVeroton = 0;
+    let tarvikeOsuusVeroton = 0;
+    let alv24Summa = 0;
+    let alv10Summa = 0;
 
-    // Laske tarvikkeiden yhteissumma
-    const tarvikeOsuus = lasku.tarvikkeet.reduce((sum: number, t: any) => {
-      return sum + (t.maara * Number(t.myyntihinta));
-    }, 0);
+    // 1. Tuntien laskenta (sisältää alennuksen)
+    lasku.tunnit.forEach((t: any) => {
+      const perushinta = HINNAT[t.tyyppi as keyof typeof HINNAT] || 0;
+      // Muunnetaan alennusprosentti kertoimeksi 
+      const alennusKerroin = 1 - (Number(t.alennus_prosentti || 0) / 100);
+      
+      const riviVeroton = t.maara * perushinta * alennusKerroin;
+      tyonOsuusVeroton += riviVeroton;
+      
+      alv24Summa += riviVeroton * 0.24;
+    });
 
-    const kokonaissumma = tyonOsuus + tarvikeOsuus;
+    // 2. Tarvikkeiden laskenta (sisältää alennuksen ja ALV-erittelyn)
+    lasku.tarvikkeet.forEach((t: any) => {
+      const yksikkohinta = Number(t.myyntihinta);
+      const alennusKerroin = 1 - (Number(t.alennus_prosentti || 0) / 100);
+      const alvKanta = Number(t.alv || 0.24); // Käytetään tuotteen omaa ALV-kantaa
+
+      const riviVeroton = t.maara * yksikkohinta * alennusKerroin;
+      tarvikeOsuusVeroton += riviVeroton;
+
+      // Eritellään ALV-summat 
+      if (alvKanta === 0.10) {
+        alv10Summa += riviVeroton * 0.10;
+      } else {
+        alv24Summa += riviVeroton * 0.24;
+      }
+    });
+
+    const alvYhteensa = alv24Summa + alv10Summa;
+    const kokonaissumma = tyonOsuusVeroton + tarvikeOsuusVeroton + alvYhteensa;
 
     res.render('laskut/lasku', {
       title: `Lasku #${lasku.laskunro}`,
       lasku: lasku,
-      tyonOsuus,  // Kotitalousvähennyskelpoinen summa
-      tarvikeOsuus,
+      tyonOsuusVeroton,
+      tarvikeOsuusVeroton,
+      alv24Summa,
+      alv10Summa,
+      alvYhteensa,
       kokonaissumma,
-      alvOsuus: kokonaissumma * 0.24
+      // Kotitalousvähennys lasketaan työn verollisesta osuudesta (työ + sen alv)
+      kotitalousvahennys: tyonOsuusVeroton * 1.24 
     });
 
   } catch (error) {
