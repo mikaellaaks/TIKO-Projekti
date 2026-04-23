@@ -15,4 +15,7 @@ router.post('/lisaa', tyokohteetController.createTyokohde);
 // 4. REITTI: Poista työkohde (POST /tyokohteet/poista/:id)
 router.post('/poista/:id', tyokohteetController.deleteTyokohde);
 
+// 5. REITTI: Hinta-arvio työkohteelle (GET /tyokohteet/:id/hinta-arvio)
+router.get('/:id/hinta-arvio', tyokohteetController.getHintaArvio);
+
 export default router;
