@@ -1,11 +1,9 @@
-import { Router, type Request, type Response } from 'express';
+import { Router } from 'express';
+import * as toimittajatController from '../controllers/toimittajatController';
 
 const router = Router();
 
-router.get('/', (req: Request, res: Response) => {
-      res.render('toimittajat/toimittajat', { 
-        title: 'Toimittajat',
-    });
-})
+// 1. REITTI: Toimittajista lista (GET /toimittajat)
+router.get('/', toimittajatController.listToimittajat);
 
 export default router;

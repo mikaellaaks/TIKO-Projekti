@@ -14,5 +14,5 @@ export async function add(data: Omit<TyosuoriteTarvike, 'suorite_tarvike_id'>): 
     'INSERT INTO tyosuorite_tarvike (tyosuorite_id, tarvike_id, maara, alennus_prosentti) VALUES (, , , ) RETURNING *',
     [tyosuorite_id, tarvike_id, maara, alennus_prosentti || 0]
   );
-  return rows[0];
+  return rows[0] as TyosuoriteTarvike;
 }

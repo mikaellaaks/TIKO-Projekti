@@ -1,11 +1,42 @@
-import { Router, type Request, type Response } from 'express';
+import { type Request, type Response } from 'express';
+import * as tyosuoriteModel from '../models/tyosuorite';
 import * as TyosuoriteTunti from '../models/tyosuorite_tunti';
 import * as TyosuoriteTarvike from '../models/tyosuorite_tarvike';
 import * as Tarvike from '../models/tarvike';
 
-const router = Router();
+export const listTyosuoritteet = async (req: Request, res: Response) => {
+  try {
+    const tyosuoritteet = await tyosuoriteModel.getAll();
+    res.render('tyosuoritteet/tyosuoritteet', {
+      title: 'Työsuoritteet',
+      tyosuoritteet: tyosuoritteet
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Virhe haettaessa työsuoritteita.");
+  }
+};
 
-router.post('/tyosuoritteet/:id/kirjaukset', async (req: Request, res: Response) => {
+export const getTyosuoriteDetail = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    const tyosuorite = await tyosuoriteModel.getById(id);
+
+    if (!tyosuorite) {
+      return res.status(404).send('Työsuoritetta ei löydy');
+    }
+
+    res.render('tyosuoritteet/tyosuorite', {
+      title: `Työsuorite #${id}`,
+      tyosuorite: tyosuorite
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Virhe haettaessa työsuoritetta.");
+  }
+};
+
+export const createKirjaus = async (req: Request, res: Response) => {
     try {
         const tyosuorite_id = parseInt(req.params.id as string, 10);
         const { kirjaustyyppi, tyyppi, maara, tarvike_id, alennus_prosentti } = req.body;
@@ -44,6 +75,4 @@ router.post('/tyosuoritteet/:id/kirjaukset', async (req: Request, res: Response)
         console.error("Virhe kirjauksessa:", err);
         res.status(500).send("Tietokantavirhe");
     }
-});
-
-export default router;
+};
