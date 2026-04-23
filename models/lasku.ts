@@ -107,3 +107,43 @@ export async function addMuistutusLasku(): Promise<Lasku[]> {
     client.release();
   }
 }
+export const getFullLaskuDetails = async (id: number) => {
+  const query = `
+    SELECT 
+      l.*,
+      a.nimi AS asiakas_nimi, a.osoite AS asiakas_osoite, a.sahkoposti,
+      tk.nimi AS kohde_nimi, tk.osoite AS kohde_osoite,
+      ts.tyosuorite_id, ts.tyyppi AS suorite_tyyppi
+    FROM lasku l
+    JOIN tyosuorite ts ON l.lasku_id = ts.lasku_id
+    JOIN asiakas a ON ts.asiakas_id = a.asiakas_id
+    JOIN tyokohde tk ON ts.tyokohde_id = tk.tyokohde_id
+    WHERE l.lasku_id = $1;
+  `;
+  
+  const res = await pool.query(query, [id]);
+  const laskuBase = res.rows[0];
+
+  if (!laskuBase) return null;
+
+  // Haetaan erikseen tunnit
+  const tunnitRes = await pool.query(
+    'SELECT * FROM tyosuorite_tunti WHERE tyosuorite_id = $1', 
+    [laskuBase.tyosuorite_id]
+  );
+
+  // Haetaan erikseen tarvikkeet
+  const tarvikkeetRes = await pool.query(`
+    SELECT tt.*, t.nimi, t.myyntihinta, t.alv 
+    FROM tyosuorite_tarvike tt
+    JOIN tarvike t ON tt.tarvike_id = t.tarvike_id
+    WHERE tt.tyosuorite_id = $1`, 
+    [laskuBase.tyosuorite_id]
+  );
+
+  return {
+    ...laskuBase,
+    tunnit: tunnitRes.rows,
+    tarvikkeet: tarvikkeetRes.rows
+  };
+};
