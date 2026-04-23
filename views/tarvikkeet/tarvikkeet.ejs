@@ -8,6 +8,15 @@
                 <%- include('../partials/nav') %>
 
                     <main class="container">
+                        <section style="margin-bottom: 2rem; background: #f9f9f9; padding: 1rem; border-radius: 8px;">
+                            <h3>Tuo toimittajan hinnasto (XML)</h3>
+                            <p>Lataa XML-tiedosto päivittääksesi tarvikkeet ja siirtääksesi vanhat historiaan.</p>
+                            <form action="/tarvikkeet/tuo-hinnasto" method="POST" enctype="multipart/form-data" style="margin-top: 1rem;">
+                                <input type="file" name="hinnasto" accept=".xml" required />
+                                <button type="submit" class="btn-primary">Päivitä Hinnasto</button>
+                            </form>
+                        </section>
+
                         <div class="page-header">
                             <h2>Tarvikkeet</h2>
                             <button id="openModal" class="btn-primary">+ Lisää uusi lasku</button>

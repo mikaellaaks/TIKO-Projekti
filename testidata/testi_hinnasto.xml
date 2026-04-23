@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tarvikkeet>
+    <toimittaja>
+        <toim_nimi>Junk Co</toim_nimi>
+        <osoite>Romutie 13, 00100 Helsinki</osoite>
+    </toimittaja>
+    
+    <tarvike>
+        <ttiedot>
+            <id>100</id>
+            <nimi>Sähköjohto MMJ 3x1.5</nimi>
+            <merkki>Draka</merkki>
+            <tyyppi>Kaapeli</tyyppi>
+            <hinta>1.20</hinta>
+            <yksikko>metri</yksikko>
+        </ttiedot>
+    </tarvike>
+    
+    <tarvike>
+        <ttiedot>
+            <id>101</id>
+            <nimi>Pistorasia 2-osainen</nimi>
+            <merkki>Schneider Electric</merkki>
+            <tyyppi>Uppoasennus</tyyppi>
+            <hinta>6.50</hinta>
+            <yksikko>kpl</yksikko>
+        </ttiedot>
+    </tarvike>
+</tarvikkeet>
