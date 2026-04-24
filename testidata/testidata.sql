@@ -1,14 +1,17 @@
 /* ASIAKAS */
-INSERT INTO asiakas (asiakas_id, nimi, osoite) VALUES (1, 'Hosunen, Jaska', 'Susimetsä');
-INSERT INTO asiakas (asiakas_id, nimi, osoite) VALUES (2, 'Jokinen, Lissu', 'Nurmitie');
-INSERT INTO asiakas (asiakas_id, nimi, osoite) VALUES (3, 'Näsänen, Masa', 'Masalantie');
+INSERT INTO asiakas (asiakas_id, nimi, osoite, puhelinnro, sahkoposti) VALUES (1, 'Hosunen, Jaska', 'Susimetsä', '0401234561', 'jaska.hosunen@example.com');
+INSERT INTO asiakas (asiakas_id, nimi, osoite, puhelinnro, sahkoposti) VALUES (2, 'Jokinen, Lissu', 'Nurmitie', '0401234562', 'lissu.jokinen@example.com');
+INSERT INTO asiakas (asiakas_id, nimi, osoite, puhelinnro, sahkoposti) VALUES (3, 'Näsänen, Masa', 'Masalantie', '0401234563', 'masa.nasanen@example.com');
+INSERT INTO asiakas (asiakas_id, nimi, osoite, puhelinnro, sahkoposti) VALUES (4, 'Virtanen, Pekka', 'Aaltokuja', '0401234564', 'pekka.virtanen@example.com');
+INSERT INTO asiakas (asiakas_id, nimi, osoite, puhelinnro, sahkoposti) VALUES (5, 'Jokela, Ritva', 'Kalliopolku', '0401234565', 'ritva.jokela@example.com');
+INSERT INTO asiakas (asiakas_id, nimi, osoite, puhelinnro, sahkoposti) VALUES (6, 'Jokunen, Matti', 'Navettatie', '0401234566', 'matti.jokunen@example.com');
 
 /* TYOKOHDE */
-INSERT INTO tyokohde (tyokohde_id, nimi, osoite, asiakas_id) VALUES (1, 'Kohde Susimetsä', 'Susimetsä', 1);
-INSERT INTO tyokohde (tyokohde_id, nimi, osoite, asiakas_id) VALUES (2, 'Kohde Nurmitie', 'Nurmitie', 2);
-INSERT INTO tyokohde (tyokohde_id, nimi, osoite, asiakas_id) VALUES (3, 'Kohde Puotonkorpi', 'Puotonkorpi', 3);
-INSERT INTO tyokohde (tyokohde_id, nimi, osoite, asiakas_id) VALUES (4, 'Kohde Huitsinneva', 'Huitsinneva', 2);
-INSERT INTO tyokohde (tyokohde_id, nimi, osoite, asiakas_id) VALUES (5, 'Kohde Masalantie', 'Masalantie', 3);
+INSERT INTO tyokohde (tyokohde_id, nimi, osoite, asiakas_id) VALUES (1, 'Susimetsä', 'Susimetsä', 1);
+INSERT INTO tyokohde (tyokohde_id, nimi, osoite, asiakas_id) VALUES (2, 'Nurmitie', 'Nurmitie', 2);
+INSERT INTO tyokohde (tyokohde_id, nimi, osoite, asiakas_id) VALUES (3, 'Puotonkorpi', 'Puotonkorpi', 3);
+INSERT INTO tyokohde (tyokohde_id, nimi, osoite, asiakas_id) VALUES (4, 'Huitsinneva', 'Huitsinneva', 2);
+INSERT INTO tyokohde (tyokohde_id, nimi, osoite, asiakas_id) VALUES (5, 'Masalantie', 'Masalantie', 3);
 
 /* TOIMITTAJA */
 INSERT INTO toimittaja (toimittaja_id, nimi) VALUES (1, 'How-data');

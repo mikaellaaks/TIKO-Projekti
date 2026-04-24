@@ -12,8 +12,18 @@ export interface Lasku {
 }
 
 // Hae kaikki laskut
-export async function getAll(): Promise<Lasku[]> {
-  const { rows } = await pool.query<Lasku>('SELECT * FROM lasku');
+export async function getAll(): Promise<any[]> {
+  const { rows } = await pool.query(`
+    SELECT DISTINCT ON (lasku.lasku_id)
+      lasku.*, 
+      asiakas.nimi AS asiakas_nimi, 
+      tyokohde.nimi AS tyokohde_nimi 
+    FROM lasku
+    LEFT JOIN tyosuorite ON lasku.lasku_id = tyosuorite.lasku_id
+    LEFT JOIN asiakas ON tyosuorite.asiakas_id = asiakas.asiakas_id
+    LEFT JOIN tyokohde ON tyosuorite.tyokohde_id = tyokohde.tyokohde_id
+    ORDER BY lasku.lasku_id DESC
+  `);
   return rows;
 }
 
