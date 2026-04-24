@@ -157,3 +157,20 @@ export const getFullLaskuDetails = async (id: number) => {
     tarvikkeet: tarvikkeetRes.rows
   };
 };
+
+// Hae kaikki tietyn asiakkaan laskut
+export async function getByAsiakasId(asiakasId: number): Promise<any[]> {
+  const query = `
+    SELECT DISTINCT ON (l.lasku_id)
+      l.*, 
+      tk.nimi AS tyokohde_nimi 
+    FROM lasku l
+    INNER JOIN tyosuorite ts ON l.lasku_id = ts.lasku_id
+    LEFT JOIN tyokohde tk ON ts.tyokohde_id = tk.tyokohde_id
+    WHERE ts.asiakas_id = $1
+    ORDER BY l.lasku_id DESC
+  `;
+
+  const { rows } = await pool.query(query, [asiakasId]);
+  return rows;
+}

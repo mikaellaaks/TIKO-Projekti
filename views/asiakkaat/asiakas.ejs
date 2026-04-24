@@ -41,8 +41,51 @@
 
                         <div class="bottom-sections">
                             <section class="data-card">
-                                <h3>Avoimet laskut</h3>
-                                <p class="muted-text">Ei avoimia laskuja</p>
+                                <div class="card-header">
+                                    <h3>Asiakkaan laskut</h3>
+                                </div>
+
+                                <% if (laskut && laskut.length> 0) { %>
+                                    <table class="data-table" style="width: 100%; margin-top: 10px;">
+                                        <thead>
+                                            <tr>
+                                                <th>Laskunro</th>
+                                                <th>Päivämäärä</th>
+                                                <th>Eräpäivä</th>
+                                                <th>Summa</th>
+                                                <th>Tila</th>
+                                                <th style="text-align: right;">Toiminnot</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% laskut.forEach(lasku=> { %>
+                                                <tr>
+                                                    <td>#<%= lasku.lasku_id %>
+                                                    </td>
+                                                    <td>
+                                                        <%= new Date(lasku.paivamaara).toLocaleDateString('fi-FI') %>
+                                                    </td>
+                                                    <td>
+                                                        <%= new Date(lasku.erapaiva).toLocaleDateString('fi-FI') %>
+                                                    </td>
+                                                    <td>€<%= Number(lasku.kokonaissumma).toFixed(2) %>
+                                                    </td>
+                                                    <td>
+                                                        <span
+                                                            class="status-badge <%= lasku.maksettu ? 'status-paid' : 'status-pending' %>">
+                                                            <%= lasku.maksettu ? 'Maksettu' : 'Avoin' %>
+                                                        </span>
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        <button class="btn-primary btn-edit" onclick="window.location.href='/laskut/nayta/<%= lasku.lasku_id %>'">Avaa</button>
+                                                    </td>
+                                                </tr>
+                                                <% }) %>
+                                        </tbody>
+                                    </table>
+                                    <% } else { %>
+                                        <p class="muted-text">Ei laskuja tälle asiakkaalle.</p>
+                                        <% } %>
                             </section>
 
                             <section class="data-card">
@@ -79,7 +122,8 @@
                                                             onsubmit="return confirm('Haluatko varmasti poistaa tämän kohteen?')">
                                                             <input type="hidden" name="asiakas_id"
                                                                 value="<%= asiakas.asiakas_id %>">
-                                                            <button type="submit" class="btn-primary btn-delete">Poista</button>
+                                                            <button type="submit"
+                                                                class="btn-primary btn-delete">Poista</button>
                                                         </form>
                                                     </td>
                                                 </tr>
