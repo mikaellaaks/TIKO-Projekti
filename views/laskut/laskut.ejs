@@ -10,7 +10,6 @@
                     <main class="container">
                         <div class="page-header">
                             <h2>Laskut</h2>
-                            <button id="openModal" class="btn-primary">+ Lisää uusi lasku</button>
                         </div>
 
                         <table class="data-table">
@@ -23,6 +22,7 @@
                                     <th>Eräpäivä</th>
                                     <th>Summa</th>
                                     <th>Maksettu</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -44,14 +44,19 @@
                                             <%= lasku.erapaiva ? lasku.erapaiva.toLocaleDateString() : '' %>
                                         </td>
                                         <td>
-                                            €<%= lasku.kokonaissumma ? Number(lasku.kokonaissumma).toFixed(2) : '0.00' %>
+                                            €<%= lasku.kokonaissumma ? Number(lasku.kokonaissumma).toFixed(2) : '0.00'
+                                                %>
                                         </td>
                                         <td>
-                                            <% if (lasku.maksettu) { %>
-                                                Kyllä
-                                            <% } else { %>
-                                                Ei
-                                            <% } %>
+                                            <% if (!lasku.maksettu) { %>
+                                                <form action="/laskut/maksettu/<%= lasku.lasku_id %>" method="POST"
+                                                    style="display:inline;">
+                                                    <button type="submit" class="btn-primary btn-edit">Merkitse
+                                                        maksetuksi</button>
+                                                </form>
+                                                <% } else { %>
+                                                    <span class="status-paid">Maksettu</span>
+                                                    <% } %>
                                         </td>
                                     </tr>
                                     <% }) %>
@@ -61,17 +66,18 @@
         </div>
         <%- include('../partials/footer') %>
     </body>
-<script>
-    const modal = document.getElementById("customerModal");
-    const openBtn = document.getElementById("openModal");
-    const closeBtns = document.querySelectorAll(".close-btn");
+    <script>
+        const modal = document.getElementById("customerModal");
+        const openBtn = document.getElementById("openModal");
+        const closeBtns = document.querySelectorAll(".close-btn");
 
-    // Avaa ikkuna
-    openBtn.onclick = () => modal.style.display = "block";
+        // Avaa ikkuna
+        openBtn.onclick = () => modal.style.display = "block";
 
-    // Sulje ikkuna ruksista tai peruuta-namiskasta
-    closeBtns.forEach(btn => {
-        btn.onclick = () => modal.style.display = "none";
-    });
-</script>
+        // Sulje ikkuna ruksista tai peruuta-namiskasta
+        closeBtns.forEach(btn => {
+            btn.onclick = () => modal.style.display = "none";
+        });
+    </script>
+
 </html>
