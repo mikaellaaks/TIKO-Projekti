@@ -29,3 +29,8 @@ export async function getById(id: number): Promise<Toimittaja | undefined> {
   );
   return rows[0];
 }
+
+// Poista toimittaja ID:n perusteella
+export async function remove(id: number): Promise<void> {
+    await pool.query('DELETE FROM toimittaja WHERE toimittaja_id = $1', [id]);
+}

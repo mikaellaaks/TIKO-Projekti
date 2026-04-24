@@ -10,30 +10,44 @@
                     <main class="container">
                         <div class="page-header">
                             <h2>Toimittajat</h2>
-                            <button id="openModal" class="btn-primary">+ Lisää uusi lasku</button>
+                            <button id="openModal" class="btn-primary">+ Lisää uusi toimittaja</button>
                         </div>
 
                         <table class="data-table">
                             <thead>
                                 <tr>
                                     <th>Tunnus</th>
-                                    <th>Asiakas</th>
-                                    <th>Työkohde</th>
-                                    <th>Päivämäärä</th>
-                                    <th>Eräpäivä</th>
-                                    <th>Summa</th>
-                                    <th>Maksettu</th>
+                                    <th>Nimi</th>
+                                    <th>Toiminnot</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                
+                                <% toimittajat.forEach(toimittaja=> { %>
+                                    <tr>
+                                        <td><strong>
+                                                <%= toimittaja.toimittaja_id %>
+                                            </strong></td>
+                                        <td>
+                                            <%= toimittaja.nimi %>
+                                        </td>
+                                        <td>
+                                            <form action="/toimittajat/poista/<%= toimittaja.toimittaja_id %>" method="POST"
+                                                style="display: inline;"
+                                                onsubmit="return confirm('Haluatko varmasti poistaa tämän toimittajan?')">
+                                                <input type="hidden" name="toimittaja_id"
+                                                    value="<%= toimittaja.toimittaja_id %>">
+                                                <button type="submit" class="btn-primary btn-delete">Poista</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
                             </tbody>
                         </table>
 
                         <div id="customerModal" class="modal">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h3>Lisää uusi lasku</h3>
+                                    <h3>Lisää uusi toimittaja</h3>
                                     <span class="close-btn">&times;</span>
                                 </div>
                                 <form action="/toimittajat/lisaa" method="POST">
@@ -42,22 +56,10 @@
                                             <label>Nimi</label>
                                             <input type="text" name="nimi" required>
                                         </div>
-                                        <div class="form-group">
-                                            <label>Osoite</label>
-                                            <input type="text" name="osoite" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Sähköposti</label>
-                                            <input type="email" name="email" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Puhelinnumero</label>
-                                            <input type="text" name="puhelinnumero" required>
-                                        </div>
                                     </div>
                                     <div class="form-actions">
                                         <button type="button" class="btn-primary btn-cancel close-btn">Peruuta</button>
-                                        <button type="submit" class="btn-primary">Tallenna asiakas</button>
+                                        <button type="submit" class="btn-primary">Tallenna toimittaja</button>
                                     </div>
                                 </form>
                             </div>
@@ -66,17 +68,18 @@
         </div>
         <%- include('../partials/footer') %>
     </body>
-<script>
-    const modal = document.getElementById("customerModal");
-    const openBtn = document.getElementById("openModal");
-    const closeBtns = document.querySelectorAll(".close-btn");
+    <script>
+        const modal = document.getElementById("customerModal");
+        const openBtn = document.getElementById("openModal");
+        const closeBtns = document.querySelectorAll(".close-btn");
 
-    // Avaa ikkuna
-    openBtn.onclick = () => modal.style.display = "block";
+        // Avaa ikkuna
+        openBtn.onclick = () => modal.style.display = "block";
 
-    // Sulje ikkuna ruksista tai peruuta-namiskasta
-    closeBtns.forEach(btn => {
-        btn.onclick = () => modal.style.display = "none";
-    });
-</script>
+        // Sulje ikkuna ruksista tai peruuta-namiskasta
+        closeBtns.forEach(btn => {
+            btn.onclick = () => modal.style.display = "none";
+        });
+    </script>
+
 </html>
