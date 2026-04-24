@@ -7,6 +7,7 @@ import tarvikkeetRouter from './routes/tarvikkeet';
 import toimittajatRouter from './routes/toimittajat';
 import tyokohteetRouter from './routes/tyokohteet';
 import tyosuoritteetRouter from './routes/tyosuoritteet';
+import urakkasopimuksetRouter from './routes/urakkasopimukset';
 
 const app = express();
 const port = 8010;
@@ -35,6 +36,7 @@ app.use('/tarvikkeet', tarvikkeetRouter);
 app.use('/toimittajat', toimittajatRouter);
 app.use('/tyokohteet', tyokohteetRouter);
 app.use('/tyosuoritteet', tyosuoritteetRouter);
+app.use('/urakkasopimukset', urakkasopimuksetRouter);
 
 app.listen(port, () => {
     console.log(`Palvelin pyärii osoitteessa: http://localhost:${port}`);

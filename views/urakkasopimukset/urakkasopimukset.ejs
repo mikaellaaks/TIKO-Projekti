@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fi">
+<%- include('../partials/head') %>
+
+    <body>
+        <div class="content-wrapper">
+            <%- include('../partials/header') %>
+                <%- include('../partials/nav') %>
+
+                    <main class="container">
+                        <div class="page-header">
+                            <h2>Urakkasopimukset</h2>
+                            <button id="openModal" class="btn-primary">+ Lisää uusi urakka</button>
+                        </div>
+
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Tunnus</th>
+                                    <th>Asiakas ID</th>
+                                    <th>Työkohde ID</th>
+                                    <th>Päivämäärä</th>
+                                    <th>Suunnittelutunnit</th>
+                                    <th>Työtunnit</th>
+                                    <th>Hyväksytty</th>
+                                    <th>Toiminnot</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% urakkasopimukset.forEach(urakka => { %>
+                                    <tr>
+                                        <td><%= urakka.urakkasopimus_id %></td>
+                                        <td><%= urakka.asiakas_id %></td>
+                                        <td><%= urakka.tyokohde_id %></td>
+                                        <td><%= new Date(urakka.luotu_pvm).toLocaleDateString('fi-FI') %></td>
+                                        <td><%= urakka.suunnittelu_tunnit %> h</td>
+                                        <td><%= urakka.tyo_tunnit %> h</td>
+                                        <td><%= urakka.hyvaksytty ? 'Kyllä' : 'Ei' %></td>
+                                        <td><a href="/urakkasopimukset/<%= urakka.urakkasopimus_id %>/tarjous" class="btn-primary">Näytä tarjous</a></td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+
+                        <div id="customerModal" class="modal">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3>Lisää uusi urakkasopimus</h3>
+                                    <span class="close-btn">&times;</span>
+                                </div>
+                                <form action="/urakkasopimukset/lisaa" method="POST">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label>Asiakas ID</label>
+                                            <input type="number" name="asiakas_id" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Työkohde ID</label>
+                                            <input type="number" name="tyokohde_id" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Suunnittelutunnit</label>
+                                            <input type="number" name="suunnittelu_tunnit" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Työtunnit</label>
+                                            <input type="number" name="tyo_tunnit" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Alennusprosentti</label>
+                                            <input type="number" name="alennus_prosentti" value="10" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="button" class="btn-primary btn-cancel close-btn">Peruuta</button>
+                                        <button type="submit" class="btn-primary">Tallenna urakka</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </main>
+        </div>
+        <%- include('../partials/footer') %>
+    </body>
+<script>
+    const modal = document.getElementById("customerModal");
+    const openBtn = document.getElementById("openModal");
+    const closeBtns = document.querySelectorAll(".close-btn");
+
+    // Avaa ikkuna
+    openBtn.onclick = () => modal.style.display = "block";
+
+    // Sulje ikkuna ruksista tai peruuta-namiskasta
+    closeBtns.forEach(btn => {
+        btn.onclick = () => modal.style.display = "none";
+    });
+</script>
+</html>

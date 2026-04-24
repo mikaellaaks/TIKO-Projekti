@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fi">
+<%- include('../partials/head') %>
+
+<body>
+    <div class="content-wrapper">
+        <%- include('../partials/header') %>
+        <%- include('../partials/nav') %>
+
+        <main class="container">
+            <div class="page-header">
+                <h2><%= title %></h2>
+                <a href="/urakkasopimukset" class="btn-primary" style="background-color: var(--secondary-color)">Palaa takaisin</a>
+            </div>
+
+            <div style="background-color: var(--surface-color); padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 2rem;">
+                <h3 style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px;">Asiakkaan ja Työkohteen Tiedot</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <p style="color: #666; font-size: 0.9em; margin-bottom: 5px;">Asiakas</p>
+                        <p style="font-weight: 600; margin-bottom: 2px;"><%= urakka.asiakas_nimi %></p>
+                        <p><%= urakka.asiakas_osoite %></p>
+                    </div>
+                    <div>
+                        <p style="color: #666; font-size: 0.9em; margin-bottom: 5px;">Työkohde</p>
+                        <p style="font-weight: 600; margin-bottom: 2px;"><%= urakka.tyokohde_nimi %></p>
+                        <p><%= urakka.tyokohde_osoite %></p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: var(--surface-color); padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 2rem;">
+                <h3 style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px;">Arvioitu Työn Osuus</h3>
+                <table class="data-table" style="margin-bottom: 20px;">
+                    <thead>
+                        <tr>
+                            <th>Työlaji</th>
+                            <th>Tunnit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Suunnittelu (55 €/h sis. alv)</td>
+                            <td><%= urakka.suunnittelu_tunnit %> h</td>
+                        </tr>
+                        <tr>
+                            <td>Asennustyö (45 €/h sis. alv)</td>
+                            <td><%= urakka.tyo_tunnit %> h</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="background-color: #f8f9fa; padding: 15px; border-radius: var(--border-radius);">
+                    <p style="margin-bottom: 5px;">Alennus työn osuudesta: <strong><%= urakka.alennus_prosentti || 10 %> %</strong></p>
+                    <p style="margin-bottom: 5px;">Työn yhteishinta (alviton, alennuksen jälkeen): <strong><%= laskelmat.tyonYhteensaEiAlv.toFixed(2) %> €</strong></p>
+                    <p style="margin-bottom: 5px;">Työn ALV (24%): <strong><%= laskelmat.tyonAlvOsuus.toFixed(2) %> €</strong></p>
+                    <p style="font-size: 1.1em; font-weight: 600; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">Työn hinta yhteensä (sis. ALV): <%= laskelmat.tyonYhteensaAlvilla.toFixed(2) %> €</p>
+                </div>
+            </div>
+
+            <div style="background-color: var(--surface-color); padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 2rem;">
+                <h3 style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px;">Arvioitu Tarvikkeiden Osuus</h3>
+                <table class="data-table" style="margin-bottom: 20px;">
+                    <thead>
+                        <tr>
+                            <th>Tarvike</th>
+                            <th>Yksikkö</th>
+                            <th>Määrä</th>
+                            <th>Veroton á Hinta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% urakka.tarvikkeet.forEach(t => { %>
+                            <tr>
+                                <td><%= t.nimi %></td>
+                                <td><%= t.yksikko %></td>
+                                <td><%= t.maara %></td>
+                                <td><%= Number(t.myyntihinta).toFixed(2) %> €</td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+                <div style="background-color: #f8f9fa; padding: 15px; border-radius: var(--border-radius);">
+                    <p style="margin-bottom: 5px;">Tarvikkeet yhteensä (alviton): <strong><%= laskelmat.tarvikkeetEiAlv.toFixed(2) %> €</strong></p>
+                    <p style="margin-bottom: 5px;">Tarvikkeiden ALV (24%): <strong><%= laskelmat.tarvikkeetAlvOsuus.toFixed(2) %> €</strong></p>
+                    <p style="font-size: 1.1em; font-weight: 600; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">Tarvikkeiden hinta yhteensä (sis. ALV): <%= laskelmat.tarvikkeetYhteensaAlvilla.toFixed(2) %> €</p>
+                </div>
+            </div>
+
+            <div style="background-color: var(--primary-color); color: white; padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 style="margin-bottom: 0;">Urakkatarjous Yhteensä (sis. ALV 24%)</h3>
+                    <p style="margin: 0; opacity: 0.8; font-size: 0.9em;">Tämä on arvioitu kokonaiskustannus koko urakalle.</p>
+                </div>
+                <div style="font-size: 2em; font-weight: bold;">
+                    <%= laskelmat.kokonaisKustannus.toFixed(2) %> €
+                </div>
+            </div>
+
+            <% if (!urakka.hyvaksytty) { %>
+                <form action="/urakkasopimukset/<%= urakka.urakkasopimus_id %>/hyvaksy" method="POST" style="text-align: right; margin-bottom: 40px;">
+                    <button type="submit" class="btn-primary" style="background-color: #2e7d32; font-size: 1.2em; padding: 15px 30px;">
+                        Hyväksy Urakka
+                    </button>
+                </form>
+            <% } else { %>
+                <div style="background-color: #e8f5e9; color: #2e7d32; padding: 20px; border-radius: var(--border-radius); text-align: center; font-weight: bold; font-size: 1.1em; margin-bottom: 40px; border: 1px solid #c8e6c9;">
+                    Tämä urakka on jo hyväksytty!
+                </div>
+            <% } %>
+
+        </main>
+    </div>
+    <%- include('../partials/footer') %>
+</body>
+</html>
