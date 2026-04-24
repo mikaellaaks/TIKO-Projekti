@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fi">
+<%- include('../partials/head') %>
+<body>
+    <div class="content-wrapper">
+        <%- include('../partials/header') %>
+        <%- include('../partials/nav') %>
+
+        <main class="container">
+            <div class="page-header">
+                <h2>⚠️ Turvallisuusraportti: Junk Co</h2>
+                <p>Viallisia tuotteita havaittu seuraavissa kohteissa</p>
+            </div>
+
+            <section class="info-card">
+                <% if (tulokset && tulokset.length > 0) { %>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Asiakas</th>
+                                <th>Työkohde</th>
+                                <th>Toimitettu tuote</th>
+                                <th>Määrä</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% tulokset.forEach(r => { %>
+                                <tr>
+                                    <td><strong><%= r.asiakas %></strong></td>
+                                    <td><%= r.tyokohde %></td>
+                                    <td><%= r.tuote %></td>
+                                    <td><%= r.maara %> kpl</td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <p>Ei löytyneitä Junk Co -asennuksia.</p>
+                <% } %>
+            </section>
+
+            <div class="breadcrumb">
+                <a href="/">← Takaisin etusivulle</a>
+            </div>
+        </main>
+    </div>
+    <%- include('../partials/footer') %>
+</body>
+</html>

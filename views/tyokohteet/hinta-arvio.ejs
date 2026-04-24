@@ -8,97 +8,66 @@
 
         <main class="container">
             <div class="breadcrumb">
-                <a href="/tyokohteet">← Takaisin työkohteet</a>
+                <a href="/tyokohteet/<%= tyokohde.id %>">← Takaisin kohteeseen</a>
             </div>
 
-            <section class="info-card">
-                <h2>Hinta-arvio - <%= tyokohde.nimi %></h2>
-                <p><strong>Osoite:</strong> <%= tyokohde.osoite %></p>
-            </section>
+            <header class="page-header">
+                <h1>Hinta-arvio</h1>
+                <p><strong>Kohde:</strong> <%= tyokohde.nimi %> | <strong>Osoite:</strong> <%= tyokohde.osoite %></p>
+            </header>
 
-            <section class="info-card">
-                <h3>Tuntityöt</h3>
-                <% if (tulos.tuntirivit.length === 0) { %>
-                    <p class="muted-text">Ei tuntitöitä kirjattuna</p>
-                <% } else { %>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Tyyppi</th>
-                            <th>Määrä (h)</th>
-                            <th>Yksikköhinta (€/h)</th>
-                            <th>Yhteensä (€)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% tulos.tuntirivit.forEach(rivi => { %>
+            <div class="grid-container">
+                <section class="info-card">
+                    <h3>Työ ja tarvikkeet</h3>
+                    <table class="data-table">
+                        <thead>
                             <tr>
-                                <td><%= rivi.nimi %></td>
-                                <td><%= rivi.maara %></td>
-                                <td><%= rivi.yksikkohinta %></td>
-                                <td><%= rivi.hinta.toFixed(2) %></td>
+                                <th>Nimike</th>
+                                <th>Määrä</th>
+                                <th>Hinta (alv 0%)</th>
                             </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-                <% } %>
-            </section>
+                        </thead>
+                        <tbody>
+                            <% tulos.tuntirivit.forEach(rivi => { %>
+                                <tr>
+                                    <td>Työ: <%= rivi.nimi %></td>
+                                    <td><%= rivi.maara %> h</td>
+                                    <td><%= rivi.hinta.toFixed(2) %> €</td>
+                                </tr>
+                            <% }) %>
+                            <% tulos.tarvikerivit.forEach(rivi => { %>
+                                <tr>
+                                    <td><%= rivi.nimi %></td>
+                                    <td><%= rivi.maara %> kpl</td>
+                                    <td><%= rivi.hinta.toFixed(2) %> €</td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </section>
 
-            <section class="info-card">
-                <h3>Tarvikkeet</h3>
-                <% if (tulos.tarvikerivit.length === 0) { %>
-                    <p class="muted-text">Ei tarvikkeita kirjattuna</p>
-                <% } else { %>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Nimi</th>
-                            <th>Määrä</th>
-                            <th>Yksikköhinta (€)</th>
-                            <th>Yhteensä (€)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% tulos.tarvikerivit.forEach(rivi => { %>
-                            <tr>
-                                <td><%= rivi.nimi %></td>
-                                <td><%= rivi.maara %></td>
-                                <td><%= rivi.yksikkohinta %></td>
-                                <td><%= rivi.hinta.toFixed(2) %></td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-                <% } %>
-            </section>
-
-            <section class="info-card">
-                <h3>Yhteenveto</h3>
-                <table class="data-table">
-                    <tbody>
-                        <tr>
-                            <td>Tuntityöt yhteensä (alv 0%)</td>
-                            <td><%= tulos.tyo_yhteensa.toFixed(2) %> €</td>
-                        </tr>
-                        <tr>
-                            <td>Tarvikkeet yhteensä (alv 0%)</td>
-                            <td><%= tulos.tarvike_yhteensa.toFixed(2) %> €</td>
-                        </tr>
-                        <tr>
-                            <td>ALV 24%</td>
-                            <td><%= tulos.alv.toFixed(2) %> €</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Kokonaissumma</strong></td>
-                            <td><strong><%= tulos.kokonaissumma.toFixed(2) %> €</strong></td>
-                        </tr>
-                        <tr>
-                            <td>Kotitalousvähennyskelpoinen osuus</td>
-                            <td><%= tulos.kotitalousvahennys.toFixed(2) %> €</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
+                <section class="info-card summary-card">
+                    <h3>Kustannusarvio yhteensä</h3>
+                    <div class="summary-line">
+                        <span>Välisumma (alv 0%):</span>
+                        <strong><%= (tulos.tyo_yhteensa + tulos.tarvike_yhteensa).toFixed(2) %> €</strong>
+                    </div>
+                    <div class="summary-line">
+                        <span>ALV 24%:</span>
+                        <strong><%= tulos.alv.toFixed(2) %> €</strong>
+                    </div>
+                    <div class="summary-line total">
+                        <span><strong>Loppusumma:</strong></span>
+                        <span class="price-tag"><%= tulos.kokonaissumma.toFixed(2) %> €</span>
+                    </div>
+                    
+                    <% if (tulos.kotitalousvahennys > 0) { %>
+                        <div class="highlight-box">
+                            <small>Kotitalousvähennyskelpoinen työn osuus: <%= tulos.kotitalousvahennys.toFixed(2) %> €</small>
+                        </div>
+                    <% } %>
+                </section>
+            </div>
         </main>
     </div>
     <%- include('../partials/footer') %>

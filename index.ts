@@ -8,7 +8,9 @@ import toimittajatRouter from './routes/toimittajat';
 import tyokohteetRouter from './routes/tyokohteet';
 import tyosuoritteetRouter from './routes/tyosuoritteet';
 import urakkasopimuksetRouter from './routes/urakkasopimukset';
+import raportitRouter from './routes/raportit';
 
+console.log("Yhdistetään tietokantaan:", process.env.DB_DATABASE);
 const app = express();
 const port = 8010;
 
@@ -37,6 +39,7 @@ app.use('/toimittajat', toimittajatRouter);
 app.use('/tyokohteet', tyokohteetRouter);
 app.use('/tyosuoritteet', tyosuoritteetRouter);
 app.use('/urakkasopimukset', urakkasopimuksetRouter);
+app.use('/raportit', raportitRouter);
 
 app.listen(port, () => {
     console.log(`Palvelin pyärii osoitteessa: http://localhost:${port}`);
