@@ -1,22 +1,24 @@
 import { type Request, type Response } from 'express';
 import * as TyokohdeModel from '../models/tyokohde';
-import * as TarvikeModel from '../models/tarvike';
+import * as AsiakasModel from '../models/asiakas';
 
 export const listTyokohteet = async (req: Request, res: Response) => {
     try {
-        const tyokohteet = await TyokohdeModel.getAll();
-        res.render('tyokohteet/tyokohteet', { 
+        // Haetaan molemmat tiedot rinnakkain (nopeampi tapa)
+        const [tyokohteet, asiakkaat] = await Promise.all([
+            TyokohdeModel.getAll(),
+            AsiakasModel.getAll()
+        ]);
+
+        // Lähetetään MOLEMMAT listat EJS-sivulle
+        res.render('tyokohteet/tyokohteet', {
             title: 'Työkohteet',
             tyokohteet: tyokohteet,
-            virheviesti: null
+            asiakkaat: asiakkaat // TÄMÄ PUUTTUI
         });
-    } catch (virhe) {
-        console.error("Virhe haettaessa työkohteita:", virhe);
-        res.render('tyokohteet/tyokohteet', { 
-            title: 'Työkohteet',
-            tyokohteet: [],
-            virheviesti: "Tietokantavirhe työkohteita haettaessa."
-        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Virhe haettaessa työkohteita tai asiakkaita.");
     }
 };
 
@@ -54,7 +56,7 @@ export const createTyokohde = async (req: Request, res: Response) => {
             asiakas_id: parseInt(asiakas_id)
         });
 
-        res.redirect('/asiakkaat/' + asiakas_id);
+        res.redirect('/tyokohteet/');
     } catch (virhe) {
         console.error("Työkohteen lisäys epäonnistui:", virhe);
         res.status(500).send("Virhe tallennettaessa työkohdetta.");
@@ -68,7 +70,7 @@ export const deleteTyokohde = async (req: Request, res: Response) => {
 
         await TyokohdeModel.remove(id);
 
-        res.redirect('/asiakkaat/' + asiakas_id);
+        res.redirect('/tyokohteet/');
     } catch (virhe) {
         console.error("Työkohteen poisto epäonnistui:", virhe);
         res.status(500).send("Virhe poistettaessa työkohdetta.");

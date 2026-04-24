@@ -2,42 +2,109 @@
 <html lang="fi">
 <%- include('../partials/head') %>
 
-<body>
-    <div class="content-wrapper">
-        <%- include('../partials/header') %>
-        <%- include('../partials/nav') %>
+    <body>
+        <div class="content-wrapper">
+            <%- include('../partials/header') %>
+                <%- include('../partials/nav') %>
 
-        <main class="container">
-            <div class="page-header">
-                <h2>Työkohteet</h2>
-            </div>
+                    <main class="container">
+                        <div class="page-header">
+                            <h2>Työkohteet</h2>
+                            <button id="openModal" class="btn-primary">+ Lisää uusi työkohde</button>
+                        </div>
 
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Tunnus</th>
-                        <th>Nimi</th>
-                        <th>Osoite</th>
-                        <th>Omistaja</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% tyokohteet.forEach(tyokohde => { %>
-                        <tr>
-                            <td><strong><%= tyokohde.tyokohde_id %></strong></td>
-                            <td><%= tyokohde.nimi %></td>
-                            <td><%= tyokohde.osoite %></td>
-                            <td>
-                                <a href="/asiakkaat/<%= tyokohde.asiakas_id %>" class="customer-link">
-                                    <%= tyokohde.asiakas_nimi || 'Avaa asiakas' %>
-                                </a>
-                            </td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table>
-        </main>
-    </div>
-    <%- include('../partials/footer') %>
-</body>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Tunnus</th>
+                                    <th>Nimi</th>
+                                    <th>Osoite</th>
+                                    <th>Omistaja</th>
+                                    <th>Toiminnot</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% tyokohteet.forEach(tyokohde=> { %>
+                                    <tr>
+                                        <td><strong>
+                                                <%= tyokohde.tyokohde_id %>
+                                            </strong></td>
+                                        <td>
+                                            <%= tyokohde.nimi %>
+                                        </td>
+                                        <td>
+                                            <%= tyokohde.osoite %>
+                                        </td>
+                                        <td>
+                                            <a href="/asiakkaat/<%= tyokohde.asiakas_id %>" class="customer-link">
+                                                <%= tyokohde.asiakas_nimi || 'Avaa asiakas' %>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <form action="/tyokohteet/poista/<%= tyokohde.tyokohde_id %>" method="POST"
+                                                style="display: inline;"
+                                                onsubmit="return confirm('Haluatko varmasti poistaa tämän työkohteen?')">
+                                                <button type="submit" class="btn-primary btn-delete">Poista</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+
+                        <div id="customerModal" class="modal">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3>Lisää uusi työkohde</h3>
+                                    <span class="close-btn">&times;</span>
+                                </div>
+                                <form action="/tyokohteet/lisaa" method="POST">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label>Kohteen nimi</label>
+                                            <input type="text" name="nimi" placeholder="Esim. Kesämökki" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Osoite</label>
+                                            <input type="text" name="osoite" placeholder="Katuosoite 123" required>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label>Omistaja (Asiakas)</label>
+                                            <select name="asiakas_id" required>
+                                                <option value="" disabled selected>Valitse asiakas...</option>
+                                                <% asiakkaat.forEach(asiakas => { %>
+                                                    <option value="<%= asiakas.asiakas_id %>">
+                                                        <%= asiakas.nimi %> (<%= asiakas.asiakas_id %>)
+                                                    </option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="button" class="btn-primary btn-cancel close-btn">Peruuta</button>
+                                        <button type="submit" class="btn-primary">Tallenna työkohde</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </main>
+        </div>
+        <%- include('../partials/footer') %>
+    </body>
+    <script>
+        const modal = document.getElementById("customerModal");
+        const openBtn = document.getElementById("openModal");
+        const closeBtns = document.querySelectorAll(".close-btn");
+
+        openBtn.onclick = () => modal.style.display = "block";
+
+        closeBtns.forEach(btn => {
+            btn.onclick = () => modal.style.display = "none";
+        });
+
+        window.onclick = (event) => {
+            if (event.target == modal) modal.style.display = "none";
+        }
+    </script>
 </html>

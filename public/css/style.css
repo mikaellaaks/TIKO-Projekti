@@ -323,3 +323,36 @@ footer {
     gap: 1rem;
     margin-bottom: 1.5rem;
 }
+
+.form-group select {
+    padding: 0.7rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #ffffff;
+    font-family: inherit;
+    color: #2C3E50;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    appearance: none;
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    background-size: 1em;
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: #0077BE;
+    box-shadow: 0 0 0 3px rgba(0, 119, 190, 0.1);
+}
+
+select option {
+    padding: 10px;
+    background-color: #ffffff;
+    color: #2C3E50;
+    font-family: 'Inter', sans-serif;
+}
+
+select option:disabled {
+    color: #999;
+}
