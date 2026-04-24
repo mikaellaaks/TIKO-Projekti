@@ -144,3 +144,9 @@ CREATE TABLE IF NOT EXISTS tyosuorite_tarvike (
   maara INTEGER NOT NULL,
   alennus_prosentti NUMERIC DEFAULT 0
 );
+
+CREATE TABLE IF NOT EXISTS tyotyyppi (
+    tyyppi TEXT PRIMARY KEY,
+    yksikkohinta NUMERIC NOT NULL,
+    alv NUMERIC DEFAULT 25.5
+);

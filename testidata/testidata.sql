@@ -70,6 +70,11 @@ INSERT INTO tyosuorite_tunti (tunti_id, tyosuorite_id, tyyppi, maara, alennus_pr
 INSERT INTO tyosuorite_tunti (tunti_id, tyosuorite_id, tyyppi, maara, alennus_prosentti) VALUES (13, 9, 'työ', 12, 0);
 INSERT INTO tyosuorite_tarvike (suorite_tarvike_id, tyosuorite_id, tarvike_id, maara, alennus_prosentti) VALUES (9, 9, 5, 3, 0);
 
+/* TYÖTYYPPIEN HINNAT */
+INSERT INTO tyotyyppi (tyyppi, yksikkohinta) VALUES ('suunnittelu', 55.00);
+INSERT INTO tyotyyppi (tyyppi, yksikkohinta) VALUES ('työ', 45.00);
+INSERT INTO tyotyyppi (tyyppi, yksikkohinta) VALUES ('aputyö', 35.00);
+
 /* RESET SEQUENCES */
 SELECT setval('asiakas_asiakas_id_seq', (SELECT MAX(asiakas_id) FROM asiakas));
 SELECT setval('tyokohde_tyokohde_id_seq', (SELECT MAX(tyokohde_id) FROM tyokohde));
