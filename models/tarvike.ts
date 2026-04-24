@@ -55,3 +55,32 @@ export async function decreaseStock(id: number, amount: number) {
     );
   }
 }
+
+// models/tarvike.ts
+
+export async function archive(id: number): Promise<void> {
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+
+        await client.query(`
+            INSERT INTO tarvike_historia (...) 
+            SELECT ... FROM tarvike WHERE tarvike_id = $1
+        `, [id]);
+
+        await client.query(`
+            UPDATE tyosuorite_tarvike 
+            SET tarvike_id = NULL 
+            WHERE tarvike_id = $1
+        `, [id]);
+
+        await client.query('DELETE FROM tarvike WHERE tarvike_id = $1', [id]);
+
+        await client.query('COMMIT');
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        client.release();
+    }
+}

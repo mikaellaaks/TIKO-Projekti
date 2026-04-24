@@ -7,6 +7,11 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 // 1. REITTI: Tarvikkeista lista (GET /tarvikkeet)
 router.get('/', tarvikkeetController.listTarvikkeet);
+
+//. 2. REITTI: Tarvikkeiden tuonti hinnastosta
 router.post('/tuo-hinnasto', upload.single('hinnasto'), tarvikkeetController.tuoHinnasto);
+
+// 3. REITTI: Arkistoituden tarvikkeiden lista
+router.get('/arkistoidut', tarvikkeetController.listArkistoidutTarvikkeet);
 
 export default router;

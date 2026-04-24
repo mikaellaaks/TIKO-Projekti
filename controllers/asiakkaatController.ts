@@ -1,6 +1,7 @@
 import { type Request, type Response } from 'express';
 import * as AsiakasModel from '../models/asiakas';
 import * as TyokohdeModel from '../models/tyokohde';
+import * as LaskuModel from '../models/lasku';
 
 export const listAsiakkaat = async (req: Request, res: Response) => {
     try {
@@ -30,11 +31,13 @@ export const getAsiakasDetail = async (req: Request, res: Response) => {
         }
 
         const tyokohteet = await TyokohdeModel.getByAsiakas(id);
+        const laskut = await LaskuModel.getByAsiakasId(id);
 
         res.render('asiakkaat/asiakas', { 
             title: loytynytAsiakas.nimi,
             asiakas: loytynytAsiakas,
-            tyokohteet: tyokohteet || []
+            tyokohteet: tyokohteet || [],
+            laskut: laskut || []
         });
     } catch (virhe) {
         console.error(virhe);
