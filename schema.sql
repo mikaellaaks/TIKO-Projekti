@@ -54,9 +54,56 @@ CREATE TABLE IF NOT EXISTS urakkasopimus (
   suunnittelu_tunnit NUMERIC DEFAULT 0,
   tyo_tunnit NUMERIC DEFAULT 0,
   alennus_prosentti NUMERIC DEFAULT 0,
+  hintakorotus_prosentti NUMERIC DEFAULT 0,
   hyvaksytty BOOLEAN DEFAULT false,
   luotu_pvm TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE urakkasopimus ADD COLUMN IF NOT EXISTS hintakorotus_prosentti NUMERIC DEFAULT 0;
+
+/* T4: Luotettavuustriggeri (Asiakkaan hintakorotus hämärätaustan mukaan) */
+CREATE OR REPLACE FUNCTION t4_tarkista_asiakas_luotettavuus()
+RETURNS TRIGGER AS $$
+DECLARE
+  maksamattomat_laskut INT;
+  karhutut_laskut INT;
+BEGIN
+  -- Tarkistetaan erääntyneet, maksamattomat laskut asiakkaalta
+  SELECT COUNT(*) INTO maksamattomat_laskut
+  FROM lasku l
+  JOIN tyosuorite ts ON ts.lasku_id = l.lasku_id
+  WHERE ts.asiakas_id = NEW.asiakas_id
+    AND l.maksettu = false
+    AND l.tila = 'valmis'
+    AND l.erapaiva < CURRENT_DATE;
+
+  IF maksamattomat_laskut > 0 THEN
+    NEW.hintakorotus_prosentti = 30;
+  ELSE
+    -- Tarkistetaan 2 vuoden takaa olevat karhulaskut (laskunro >= 3)
+    SELECT COUNT(*) INTO karhutut_laskut
+    FROM lasku l
+    JOIN tyosuorite ts ON ts.lasku_id = l.lasku_id
+    WHERE ts.asiakas_id = NEW.asiakas_id
+      AND l.laskunro >= 3
+      AND l.paivamaara >= CURRENT_DATE - INTERVAL '2 years';
+      
+    IF karhutut_laskut > 0 THEN
+      NEW.hintakorotus_prosentti = 10;
+    ELSE
+      NEW.hintakorotus_prosentti = 0;
+    END IF;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS t4_urakkatarjous_trigger ON urakkasopimus;
+CREATE TRIGGER t4_urakkatarjous_trigger
+BEFORE INSERT ON urakkasopimus
+FOR EACH ROW
+EXECUTE FUNCTION t4_tarkista_asiakas_luotettavuus();
 
 /* Tarvikehistoria */
 CREATE TABLE IF NOT EXISTS tarvike_historia (

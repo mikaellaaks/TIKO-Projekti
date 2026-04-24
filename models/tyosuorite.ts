@@ -10,8 +10,14 @@ export interface Tyosuorite {
 }
 
 // Hae kaikki työsuoritteet
-export async function getAll(): Promise<Tyosuorite[]> {
-  const { rows } = await pool.query<Tyosuorite>('SELECT * FROM tyosuorite');
+export async function getAll(): Promise<any[]> {
+  const { rows } = await pool.query(`
+    SELECT ts.*, a.nimi AS asiakas_nimi, tk.nimi AS tyokohde_nimi, tk.osoite AS tyokohde_osoite
+    FROM tyosuorite ts
+    JOIN asiakas a ON ts.asiakas_id = a.asiakas_id
+    JOIN tyokohde tk ON ts.tyokohde_id = tk.tyokohde_id
+    ORDER BY ts.tyosuorite_id DESC
+  `);
   return rows;
 }
 

@@ -15,4 +15,7 @@ router.post('/lisaa', laskutController.createLasku);
 // 4. REITTI: Merkitse maksetuksi (POST /laskut/maksettu/:id)
 router.post('/maksettu/:id', laskutController.markAsPaid);
 
+// 5. REITTI: Luo muistutukset (POST /laskut/muistutukset)
+router.post('/muistutukset', laskutController.createReminders);
+
 export default router;

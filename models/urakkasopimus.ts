@@ -53,9 +53,22 @@ export async function getUrakkaRaportti(urakka_id: number) {
   `;
   const { rows: tarvikkeet } = await pool.query(tarvikeQuery);
 
+  // T4: Korotetaan urakan hintoja jos asiakas on huono maksaja
+  const korotusprosentti = Number(urakkaData.hintakorotus_prosentti) || 0;
+  const korotusKerroin = 1 + (korotusprosentti / 100);
+
+  const korotetutTarvikkeet = tarvikkeet.map(t => ({
+    ...t,
+    myyntihinta: Number(t.myyntihinta) * korotusKerroin
+  }));
+
+  // Voitaisiin palauttaa myös korotettu tuntihinta, jos se halutaan näyttää,
+  // mutta tässä liitetään korotusprosentti etupään laskentaa varten:
   return {
     ...urakkaData,
-    tarvikkeet
+    korotusKerroin,
+    hintakorotus_prosentti: korotusprosentti,
+    tarvikkeet: korotetutTarvikkeet
   };
 }
 

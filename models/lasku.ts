@@ -63,12 +63,14 @@ export async function addMuistutusLasku(): Promise<Lasku[]> {
   try {
     await client.query('BEGIN');
 
-    const { rows } = await client.query<Lasku>(
-      `SELECT * FROM lasku 
-       WHERE maksettu = false 
-       AND tila = 'valmis' 
-       AND erapaiva < CURRENT_DATE
-       AND lasku_id NOT IN (SELECT edellinen_lasku FROM lasku WHERE edellinen_lasku IS NOT NULL)`
+    const { rows } = await client.query<any>(
+      `SELECT l.*, ts.asiakas_id, ts.tyokohde_id, ts.tyyppi, ts.urakkasopimus_id 
+       FROM lasku l
+       LEFT JOIN tyosuorite ts ON l.lasku_id = ts.lasku_id
+       WHERE l.maksettu = false 
+       AND (l.tila = 'valmis' OR l.tila IS NULL) 
+       AND l.erapaiva < CURRENT_DATE
+       AND l.lasku_id NOT IN (SELECT edellinen_lasku FROM lasku WHERE edellinen_lasku IS NOT NULL)`
     );
 
     const uudetLaskut: Lasku[] = [];
@@ -104,6 +106,15 @@ export async function addMuistutusLasku(): Promise<Lasku[]> {
         edellinen_lasku: lasku.lasku_id!,
         laskunro: lasku.laskunro + 1
       }, client);
+
+      // Lisätään myös tyosuorite uudelle laskulle, jotta kytkös asiakkaaseen säilyy!
+      if (lasku.asiakas_id && lasku.tyokohde_id) {
+          await client.query(
+              `INSERT INTO tyosuorite (asiakas_id, tyokohde_id, lasku_id, tyyppi, urakkasopimus_id)
+               VALUES ($1, $2, $3, $4, $5)`,
+              [lasku.asiakas_id, lasku.tyokohde_id, lisattyLasku.lasku_id, lasku.tyyppi || 'tunti', lasku.urakkasopimus_id || null]
+          );
+      }
 
       uudetLaskut.push(lisattyLasku);
     }

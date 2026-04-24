@@ -15,6 +15,13 @@
 
             <div style="background-color: var(--surface-color); padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 2rem;">
                 <h3 style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px;">Asiakkaan ja Työkohteen Tiedot</h3>
+                
+                <% if (urakka.hintakorotus_prosentti > 0) { %>
+                    <div style="background-color: #e74c3c; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; font-weight: bold; text-align: center;">
+                        VAROITUS: Asiakkaan maksuhistoriasta johtuva hintojen korotus +<%= urakka.hintakorotus_prosentti %>% sovellettu tarjoukseen!
+                    </div>
+                <% } %>
+                
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div>
                         <p style="color: #666; font-size: 0.9em; margin-bottom: 5px;">Asiakas</p>
@@ -40,11 +47,11 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Suunnittelu (55 €/h sis. alv)</td>
+                            <td>Suunnittelu (<%= (55 * urakka.korotusKerroin).toFixed(2) %> €/h sis. alv)</td>
                             <td><%= urakka.suunnittelu_tunnit %> h</td>
                         </tr>
                         <tr>
-                            <td>Asennustyö (45 €/h sis. alv)</td>
+                            <td>Asennustyö (<%= (45 * urakka.korotusKerroin).toFixed(2) %> €/h sis. alv)</td>
                             <td><%= urakka.tyo_tunnit %> h</td>
                         </tr>
                     </tbody>

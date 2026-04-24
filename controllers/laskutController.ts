@@ -1,12 +1,20 @@
 import { type Request, type Response } from 'express';
 import * as laskuModel from '../models/lasku';
+import * as asiakasModel from '../models/asiakas';
+import * as tyokohdeModel from '../models/tyokohde';
+import pool from '../db';
 
 export const listLaskut = async (req: Request, res: Response) => {
   try {
     const laskut = await laskuModel.getAll();
+    const asiakkaat = await asiakasModel.getAll();
+    const tyokohteet = await tyokohdeModel.getAll();
     res.render('laskut/laskut', {
       title: 'Laskut',
-      laskut: laskut
+      laskut: laskut,
+      asiakkaat: asiakkaat,
+      tyokohteet: tyokohteet,
+      message: req.query.msg || null
     });
   } catch (error) {
     console.error(error);
@@ -83,7 +91,16 @@ export const getLaskuDetail = async (req: Request, res: Response) => {
 
 export const createLasku = async (req: Request, res: Response) => {
   try {
-    await laskuModel.add(req.body);
+    const { asiakas_id, tyokohde_id, ...laskuData } = req.body;
+    const uusiLasku = await laskuModel.add(laskuData);
+    
+    if (asiakas_id && tyokohde_id) {
+      await pool.query(
+        `INSERT INTO tyosuorite (asiakas_id, tyokohde_id, lasku_id, tyyppi) VALUES ($1, $2, $3, 'tunti')`,
+        [asiakas_id, tyokohde_id, uusiLasku.lasku_id]
+      );
+    }
+
     res.redirect('/laskut');
   } catch (error) {
     console.error(error);
@@ -99,5 +116,17 @@ export const markAsPaid = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("Virhe päivitettäessä laskun tilaa.");
+  }
+};
+
+export const createReminders = async (req: Request, res: Response) => {
+  try {
+    const uudetLaskut = await laskuModel.addMuistutusLasku();
+    const msg = `Luotiin ${uudetLaskut.length} uutta muistutus/karhulaskua.`;
+    console.log(msg);
+    res.redirect('/laskut?msg=' + encodeURIComponent(msg));
+  } catch (error) {
+    console.error("Virhe muistutuslaskujen luonnissa:", error);
+    res.redirect('/laskut?msg=' + encodeURIComponent('Virhe muistutuslaskujen käsittelyssä.'));
   }
 };

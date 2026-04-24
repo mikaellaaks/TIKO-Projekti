@@ -26,9 +26,16 @@ export const getTyosuoriteDetail = async (req: Request, res: Response) => {
       return res.status(404).send('Työsuoritetta ei löydy');
     }
 
+    const tunnit = await TyosuoriteTunti.getByTyosuoriteId(id);
+    const kaytetytTarvikkeet = await TyosuoriteTarvike.getByTyosuoriteId(id);
+    const kaikkiTarvikkeet = await Tarvike.getAll();
+
     res.render('tyosuoritteet/tyosuorite', {
-      title: `Työsuorite #${id}`,
-      tyosuorite: tyosuorite
+      title: `TyÃ¶suorite #${id}`,
+      tyosuorite: tyosuorite,
+      tunnit: tunnit,
+      kaytetytTarvikkeet: kaytetytTarvikkeet,
+      kaikkiTarvikkeet: kaikkiTarvikkeet
     });
   } catch (error) {
     console.error(error);
