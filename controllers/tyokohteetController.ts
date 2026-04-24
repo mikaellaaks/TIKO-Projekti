@@ -4,7 +4,6 @@ import * as AsiakasModel from '../models/asiakas';
 
 export const listTyokohteet = async (req: Request, res: Response) => {
     try {
-        // Haetaan molemmat tiedot rinnakkain (nopeampi tapa)
         const [tyokohteet, asiakkaat] = await Promise.all([
             TyokohdeModel.getAll(),
             AsiakasModel.getAll()

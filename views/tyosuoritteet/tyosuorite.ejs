@@ -17,14 +17,10 @@
                                         ? 'Tuntityö' : 'Urakka' %>
                             </h2>
                         </div>
-
-
-
                         <div class="data-card" style="margin-bottom: 2rem;">
                             <div class="card-header">
                                 <h3>Lisää uusi kirjaus</h3>
                             </div>
-
                             <form action="/tyosuoritteet/<%= tyosuorite.tyosuorite_id %>/kirjaukset" method="POST">
                                 <div class="form-grid">
                                     <div class="form-group">
@@ -36,12 +32,12 @@
                                     </div>
 
                                     <div class="form-group">
-                                            <label for="tyyppi">Työn tyyppi</label>
-                                            <select name="tyyppi" id="tyyppi">
-                                                <option value="suunnittelu">Suunnittelu</option>
-                                                <option value="työ">Työ</option>
-                                                <option value="aputyö">Aputyö</option>
-                                            </select>
+                                        <label for="tyyppi">Työn tyyppi</label>
+                                        <select name="tyyppi" id="tyyppi">
+                                            <option value="suunnittelu">Suunnittelu</option>
+                                            <option value="työ">Työ</option>
+                                            <option value="aputyö">Aputyö</option>
+                                        </select>
                                         <div id="tarvike-fields" style="display: none;">
                                             <label for="tarvike_id">Valitse tarvike</label>
                                             <select name="tarvike_id" id="tarvike_id">
