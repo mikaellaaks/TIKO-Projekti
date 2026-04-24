@@ -38,13 +38,13 @@
                                             <%= lasku.tyokohde_nimi %>
                                         </td>
                                         <td>
-                                            <%= lasku.paivamaara.toLocaleDateString() %>
+                                            <%= lasku.paivamaara ? lasku.paivamaara.toLocaleDateString() : '' %>
                                         </td>
                                         <td>
-                                            <%= lasku.erapvm.toLocaleDateString() %>
+                                            <%= lasku.erapaiva ? lasku.erapaiva.toLocaleDateString() : '' %>
                                         </td>
                                         <td>
-                                            €<%= lasku.summa.toFixed(2) %>
+                                            €<%= lasku.kokonaissumma ? Number(lasku.kokonaissumma).toFixed(2) : '0.00' %>
                                         </td>
                                         <td>
                                             <% if (lasku.maksettu) { %>
