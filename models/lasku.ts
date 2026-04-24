@@ -132,7 +132,7 @@ export const getFullLaskuDetails = async (id: number) => {
   const query = `
     SELECT 
       l.*,
-      a.nimi AS asiakas_nimi, a.osoite AS asiakas_osoite, a.sahkoposti,
+      a.nimi AS asiakas_nimi, a.osoite AS asiakas_osoite, a.sahkoposti AS asiakas_email,
       tk.nimi AS kohde_nimi, tk.osoite AS kohde_osoite,
       ts.tyosuorite_id, ts.tyyppi AS suorite_tyyppi
     FROM lasku l
@@ -147,15 +147,20 @@ export const getFullLaskuDetails = async (id: number) => {
 
   if (!laskuBase) return null;
 
-  // Haetaan erikseen tunnit
-  const tunnitRes = await pool.query(
-    'SELECT * FROM tyosuorite_tunti WHERE tyosuorite_id = $1', 
+  // TÄRKEÄ MUUTOS: Lisätty JOIN tyohinnasto
+  const tunnitRes = await pool.query(`
+    SELECT 
+        tt.*, 
+        COALESCE(th.yksikkohinta, 0) as yksikkohinta, 
+        COALESCE(th.alv, 25.5) as alv 
+    FROM tyosuorite_tunti tt
+    LEFT JOIN tyotyyppi th ON tt.tyyppi = th.tyyppi
+    WHERE tt.tyosuorite_id = $1`, 
     [laskuBase.tyosuorite_id]
   );
 
-  // Haetaan erikseen tarvikkeet
   const tarvikkeetRes = await pool.query(`
-    SELECT tt.*, t.nimi, t.myyntihinta, t.alv 
+    SELECT tt.*, t.nimi, t.merkki, t.myyntihinta, t.alv 
     FROM tyosuorite_tarvike tt
     JOIN tarvike t ON tt.tarvike_id = t.tarvike_id
     WHERE tt.tyosuorite_id = $1`, 

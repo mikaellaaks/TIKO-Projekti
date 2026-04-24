@@ -69,6 +69,10 @@
                                                     <span class="status-paid">Maksettu</span>
                                                     <% } %>
                                         </td>
+                                        <td>
+                                            <button onclick="window.location.href='/laskut/<%= lasku.lasku_id %>'" class="btn-primary btn-edit">Näytä
+                                                lasku</button>
+                                        </td>
                                     </tr>
                                     <% }) %>
                             </tbody>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fi">
+<%- include('../partials/head') %>
+
+<body>
+    <div class="content-wrapper">
+        <%- include('../partials/header') %>
+        <%- include('../partials/nav') %>
+
+        <main class="container">
+            <div class="breadcrumb no-print" style="display: flex; justify-content: space-between; align-items: center;">
+                <a href="/laskut">← Takaisin listaan</a>
+                <div class="actions">
+                    <button onclick="window.print()" class="btn-primary">Tulosta PDF / Paperi</button>
+                </div>
+            </div>
+
+            <div class="invoice-container">
+                
+                <div class="invoice-row">
+                    <div class="company-logo-section">
+                        <h2>Sähkötärsky Oy</h2>
+                        <p>Nääskatu 123<br>33100 Tampere<br>Y-tunnus: 1234567-8</p>
+                    </div>
+                    <div class="invoice-meta-section text-right">
+                        <h1 class="invoice-title">LASKU</h1>
+                        <p><strong>Laskun numero:</strong> <%= lasku.laskunro %></p>
+                        <p><strong>Päivämäärä:</strong> <%= new Date(lasku.paivamaara).toLocaleDateString('fi-FI') %></p>
+                    </div>
+                </div>
+
+                <hr class="invoice-divider">
+
+                <div class="invoice-row">
+                    <div class="party-info">
+                        <h4>Laskun vastaanottaja</h4>
+                        <p><strong><%= lasku.asiakas_nimi %></strong></p>
+                        <p><%= lasku.asiakas_osoite %></p>
+                        <p><%= lasku.asiakas_email %></p>
+                    </div>
+                    <div class="party-info">
+                        <h4>Työkohde</h4>
+                        <p><strong><%= lasku.kohde_nimi %></strong></p>
+                        <p><%= lasku.kohde_osoite %></p>
+                    </div>
+                </div>
+
+                <div class="terms-grid">
+                    <div class="term-item">
+                        <span>Eräpäivä</span>
+                        <strong><%= new Date(lasku.erapaiva).toLocaleDateString('fi-FI') %></strong>
+                    </div>
+                    <div class="term-item">
+                        <span>Maksuehto</span>
+                        <strong>14 pv netto</strong>
+                    </div>
+                    <div class="term-item">
+                        <span>Viivästyskorko</span>
+                        <strong>8 %</strong>
+                    </div>
+                    <div class="term-item">
+                        <span>Viitenumero</span>
+                        <strong><%= 1000 + lasku.laskunro %></strong> </div>
+                </div>
+
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th>Kuvaus</th>
+                            <th class="text-right">Määrä</th>
+                            <th class="text-right">Yksikköhinta</th>
+                            <th class="text-right">ALV</th>
+                            <th class="text-right">Ale %</th>
+                            <th class="text-right">Yhteensä (alv 0%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% let yhteensaAlv0 = 0; %>
+                        <% lasku.tunnit.forEach(tunti => { 
+                            let hinta = Number(tunti.maara || 0) * Number(tunti.yksikkohinta || 0);
+                            let alennus = hinta * (Number(tunti.alennus_prosentti || 0) / 100);
+                            let riviSumma = hinta - alennus;
+                            yhteensaAlv0 += riviSumma;
+                        %>
+                        <tr>
+                            <td>Työsuorite: <%= tunti.tyyppi %></td>
+                            <td class="text-right"><%= tunti.maara %> h</td>
+                            <td class="text-right"><%= Number(tunti.yksikkohinta).toFixed(2) %> €</td>
+                            <td class="text-right"><%= tunti.alv %>%</td>
+                            <td class="text-right"><%= tunti.alennus_prosentti %>%</td>
+                            <td class="text-right"><%= riviSumma.toFixed(2) %> €</td>
+                        </tr>
+                        <% }) %>
+
+                        <% lasku.tarvikkeet.forEach(t => { 
+                            let hinta = Number(t.maara || 0) * Number(t.myyntihinta || 0);
+                            let alennus = hinta * (Number(t.alennus_prosentti || 0) / 100);
+                            let riviSumma = hinta - alennus;
+                            yhteensaAlv0 += riviSumma;
+                        %>
+                        <tr>
+                            <td>Tarvike: <%= t.nimi %></td>
+                            <td class="text-right"><%= t.maara %> kpl</td>
+                            <td class="text-right"><%= Number(t.myyntihinta).toFixed(2) %> €</td>
+                            <td class="text-right"><%= t.alv %>%</td>
+                            <td class="text-right"><%= t.alennus_prosentti %>%</td>
+                            <td class="text-right"><%= riviSumma.toFixed(2) %> €</td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+
+                <div class="summary-section">
+                    <div class="summary-box">
+                        <table class="summary-table">
+                            <tr>
+                                <td>Veroton yhteensä:</td>
+                                <td class="text-right"><%= yhteensaAlv0.toFixed(2) %> €</td>
+                            </tr>
+                            <tr>
+                                <td>ALV-osuus:</td>
+                                <td class="text-right"><%= (Number(lasku.kokonaissumma) - yhteensaAlv0).toFixed(2) %> €</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td><strong>MAKSETTAVA YHTEENSÄ:</strong></td>
+                                <td class="text-right"><strong><%= Number(lasku.kokonaissumma).toFixed(2) %> €</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="invoice-footer">
+                    <div class="footer-col">
+                        <strong>Pankkiyhteys</strong><br>
+                        FI12 3456 7890 1234 56<br>
+                        BIC: VEROPETOSFIHH
+                    </div>
+                    <div class="footer-col">
+                        <strong>Yhteystiedot</strong><br>
+                        Puh: 040 123 4567<br>
+                        laskutus@sahkotarsky.fi
+                    </div>
+                    <div class="footer-col text-right">
+                        <strong>Kiitos tilauksesta!</strong><br>
+                        Viitenumeroa on käytettävä maksettaessa.
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <%- include('../partials/footer') %>
+</body>
+</html>

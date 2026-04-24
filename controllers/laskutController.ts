@@ -130,3 +130,22 @@ export const createReminders = async (req: Request, res: Response) => {
     res.redirect('/laskut?msg=' + encodeURIComponent('Virhe muistutuslaskujen käsittelyssä.'));
   }
 };
+
+export const naytaLasku = async (req: Request, res: Response) => {
+    try {
+        const id = Number(req.params.id);
+        const laskuData = await laskuModel.getFullLaskuDetails(id);
+
+        if (!laskuData) {
+            return res.status(404).send("Laskua ei löytynyt.");
+        }
+
+        res.render('laskut/lasku_sivu', {
+            title: `Lasku #${laskuData.laskunro}`,
+            lasku: laskuData
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Virhe haettaessa laskun tietoja.");
+    }
+};
