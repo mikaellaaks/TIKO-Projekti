@@ -10,11 +10,10 @@ export const listTyokohteet = async (req: Request, res: Response) => {
             AsiakasModel.getAll()
         ]);
 
-        // Lähetetään MOLEMMAT listat EJS-sivulle
         res.render('tyokohteet/tyokohteet', {
             title: 'Työkohteet',
             tyokohteet: tyokohteet,
-            asiakkaat: asiakkaat // TÄMÄ PUUTTUI
+            asiakkaat: asiakkaat
         });
     } catch (error) {
         console.error(error);

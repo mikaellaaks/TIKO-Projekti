@@ -1,134 +1,172 @@
 <!DOCTYPE html>
 <html lang="fi">
 <%- include('../partials/head') %>
-<body>
-    <div class="content-wrapper">
-        <%- include('../partials/header') %>
-        <%- include('../partials/nav') %>
 
-        <main class="container">
-            <div class="page-header">
-                <h2>Työsuorite #<%= tyosuorite.tyosuorite_id %> - <%= tyosuorite.tyyppi === 'tunti' ? 'Tuntityö' : 'Urakka' %></h2>
-            </div>
-            <div style="margin-bottom: 20px;">
-                <a href="/tyosuoritteet" class="btn-primary" style="background-color: #7f8c8d;">&larr; Takaisin työsuoritteisiin</a>
-            </div>
+    <body>
+        <div class="content-wrapper">
+            <%- include('../partials/header') %>
+                <%- include('../partials/nav') %>
 
-            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-                <!-- TALLENNETUT TUNNIT -->
-                <div class="card" style="flex: 1; min-width: 300px; background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    <h3>Kirjatut tunnit</h3>
-                    <table class="data-table" style="margin-top: 10px;">
-                        <thead>
-                            <tr>
-                                <th>Tyyppi</th>
-                                <th>Määrä (h)</th>
-                                <th>Alennus (%)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if (tunnit && tunnit.length > 0) { %>
-                                <% tunnit.forEach(t => { %>
-                                <tr>
-                                    <td><%= t.tyyppi %></td>
-                                    <td><%= Number(t.maara).toFixed(2) %></td>
-                                    <td><%= t.alennus_prosentti %>%</td>
-                                </tr>
-                                <% }) %>
-                            <% } else { %>
-                                <tr><td colspan="3">Ei kirjattuja tunteja.</td></tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
+                    <main class="container">
+                        <div class="breadcrumb">
+                            <a href="/tyosuoritteet">← Takaisin listaan</a>
+                        </div>
 
-                <!-- TALLENNETUT TARVIKKEET -->
-                <div class="card" style="flex: 1; min-width: 300px; background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    <h3>Kirjatut tarvikkeet</h3>
-                    <table class="data-table" style="margin-top: 10px;">
-                        <thead>
-                            <tr>
-                                <th>Tarvike</th>
-                                <th>Määrä</th>
-                                <th>Alennus (%)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if (kaytetytTarvikkeet && kaytetytTarvikkeet.length > 0) { %>
-                                <% kaytetytTarvikkeet.forEach(t => { %>
-                                <tr>
-                                    <td><%= t.tarvike_nimi %></td>
-                                    <td><%= t.maara %> <%= t.yksikko %></td>
-                                    <td><%= t.alennus_prosentti %>%</td>
-                                </tr>
-                                <% }) %>
-                            <% } else { %>
-                                <tr><td colspan="3">Ei kirjattuja tarvikkeita.</td></tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                        <div class="card-header">
+                            <h2>Työsuorite #<%= tyosuorite.tyosuorite_id %> - <%= tyosuorite.tyyppi==='tunti'
+                                        ? 'Tuntityö' : 'Urakka' %>
+                            </h2>
+                        </div>
 
-            <!-- UUSI KIRJAUS -->
-            <div class="card" style="margin-top: 30px; background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                <h3>Lisää uusi kirjaus</h3>
-                <form action="/tyosuoritteet/<%= tyosuorite.tyosuorite_id %>/kirjaukset" method="POST" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px; max-width: 400px;">
-                    
-                    <label style="font-weight: bold;">Mitä haluat kirjata?</label>
-                    <select name="kirjaustyyppi" id="kirjaustyyppi" required style="padding: 10px;">
-                        <option value="tunti">Tunteja</option>
-                        <option value="tarvike">Tarvikkeita</option>
-                    </select>
 
-                    <!-- Tuntikentät -->
-                    <div id="tunti-fields" style="display: flex; flex-direction: column; gap: 10px;">
-                        <label>Työn tyyppi</label>
-                        <select name="tyyppi" style="padding: 10px;">
-                            <option value="suunnittelu">Suunnittelu</option>
-                            <option value="työ">Työ</option>
-                            <option value="aputyö">Aputyö</option>
-                        </select>
-                    </div>
 
-                    <!-- Tarvikekentät -->
-                    <div id="tarvike-fields" style="display: none; flex-direction: column; gap: 10px;">
-                        <label>Tarvike</label>
-                        <select name="tarvike_id" style="padding: 10px;">
-                            <% kaikkiTarvikkeet.forEach(tarvike => { %>
-                                <option value="<%= tarvike.tarvike_id %>"><%= tarvike.nimi %> (Saldo: <%= tarvike.saldo %> <%= tarvike.yksikko %>)</option>
-                            <% }) %>
-                        </select>
-                    </div>
+                        <div class="data-card" style="margin-bottom: 2rem;">
+                            <div class="card-header">
+                                <h3>Lisää uusi kirjaus</h3>
+                            </div>
 
-                    <!-- Yhteiset kentät -->
-                    <label>Määrä</label>
-                    <input type="number" step="0.1" min="0.1" name="maara" required style="padding: 10px;">
-                    
-                    <label>Alennusprosentti (%)</label>
-                    <input type="number" step="0.1" min="0" max="100" value="0" name="alennus_prosentti" style="padding: 10px;">
-                    
-                    <button type="submit" class="btn-primary" style="margin-top: 10px; font-size: 16px;">Tallenna kirjaus</button>
-                </form>
-            </div>
-        </main>
-    </div>
-    <%- include('../partials/footer') %>
+                            <form action="/tyosuoritteet/<%= tyosuorite.tyosuorite_id %>/kirjaukset" method="POST">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="kirjaustyyppi">Kirjaustyyppi</label>
+                                        <select name="kirjaustyyppi" id="kirjaustyyppi" required>
+                                            <option value="tunti">Tunteja</option>
+                                            <option value="tarvike">Tarvikkeita</option>
+                                        </select>
+                                    </div>
 
-    <script>
-        const tyyppiSelect = document.getElementById('kirjaustyyppi');
-        const tuntiFields = document.getElementById('tunti-fields');
-        const tarvikeFields = document.getElementById('tarvike-fields');
+                                    <div class="form-group">
+                                            <label for="tyyppi">Työn tyyppi</label>
+                                            <select name="tyyppi" id="tyyppi">
+                                                <option value="suunnittelu">Suunnittelu</option>
+                                                <option value="työ">Työ</option>
+                                                <option value="aputyö">Aputyö</option>
+                                            </select>
+                                        <div id="tarvike-fields" style="display: none;">
+                                            <label for="tarvike_id">Valitse tarvike</label>
+                                            <select name="tarvike_id" id="tarvike_id">
+                                                <% kaikkiTarvikkeet.forEach(tarvike=> { %>
+                                                    <option value="<%= tarvike.tarvike_id %>">
+                                                        <%= tarvike.nimi %> (Varastossa: <%= tarvike.saldo %>
+                                                                <%= tarvike.yksikko %>)
+                                                    </option>
+                                                    <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
 
-        tyyppiSelect.addEventListener('change', (e) => {
-            if (e.target.value === 'tunti') {
-                tuntiFields.style.display = 'flex';
-                tarvikeFields.style.display = 'none';
-            } else {
-                tuntiFields.style.display = 'none';
-                tarvikeFields.style.display = 'flex';
-            }
-        });
-    </script>
-</body>
+                                    <div class="form-group">
+                                        <label for="maara">Määrä</label>
+                                        <input type="number" step="0.1" min="0.1" name="maara" id="maara" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="alennus_prosentti">Alennus (%)</label>
+                                        <input type="number" step="0.1" min="0" max="100" value="0"
+                                            name="alennus_prosentti" id="alennus_prosentti">
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn-primary">Tallenna kirjaus</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="form-grid">
+                            <div class="data-card">
+                                <div class="card-header">
+                                    <h3>Kirjatut tunnit</h3>
+                                </div>
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Tyyppi</th>
+                                            <th>Määrä (h)</th>
+                                            <th>Alennus</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if (tunnit && tunnit.length> 0) { %>
+                                            <% tunnit.forEach(t=> { %>
+                                                <tr>
+                                                    <td>
+                                                        <%= t.tyyppi %>
+                                                    </td>
+                                                    <td>
+                                                        <%= Number(t.maara).toFixed(2) %>
+                                                    </td>
+                                                    <td class="muted-text">
+                                                        <%= t.alennus_prosentti %>%
+                                                    </td>
+                                                </tr>
+                                                <% }) %>
+                                                    <% } else { %>
+                                                        <tr>
+                                                            <td colspan="3" class="muted-text">Ei kirjattuja tunteja.
+                                                            </td>
+                                                        </tr>
+                                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="data-card">
+                                <div class="card-header">
+                                    <h3>Kirjatut tarvikkeet</h3>
+                                </div>
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Tarvike</th>
+                                            <th>Määrä</th>
+                                            <th>Alennus</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if (kaytetytTarvikkeet && kaytetytTarvikkeet.length> 0) { %>
+                                            <% kaytetytTarvikkeet.forEach(t=> { %>
+                                                <tr>
+                                                    <td>
+                                                        <%= t.tarvike_nimi %>
+                                                    </td>
+                                                    <td>
+                                                        <%= t.maara %>
+                                                            <%= t.yksikko %>
+                                                    </td>
+                                                    <td class="muted-text">
+                                                        <%= t.alennus_prosentti %>%
+                                                    </td>
+                                                </tr>
+                                                <% }) %>
+                                                    <% } else { %>
+                                                        <tr>
+                                                            <td colspan="3" class="muted-text">Ei kirjattuja
+                                                                tarvikkeita.</td>
+                                                        </tr>
+                                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </main>
+        </div>
+        <%- include('../partials/footer') %>
+
+            <script>
+                const tyyppiSelect = document.getElementById('kirjaustyyppi');
+                const tuntiFields = document.getElementById('tunti-fields');
+                const tarvikeFields = document.getElementById('tarvike-fields');
+
+                tyyppiSelect.addEventListener('change', (e) => {
+                    if (e.target.value === 'tunti') {
+                        tuntiFields.style.display = 'block';
+                        tarvikeFields.style.display = 'none';
+                    } else {
+                        tuntiFields.style.display = 'none';
+                        tarvikeFields.style.display = 'block';
+                    }
+                });
+            </script>
+    </body>
+
 </html>

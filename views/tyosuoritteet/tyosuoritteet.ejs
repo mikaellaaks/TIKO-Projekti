@@ -34,7 +34,7 @@
                                         <td><%= ts.tyyppi === 'tunti' ? 'Tuntityö' : 'Urakka' %></td>
                                         <td><%= ts.lasku_id ? 'Lasku: ' + ts.lasku_id : (ts.urakkasopimus_id ? 'Urakka: ' + ts.urakkasopimus_id : '-') %></td>
                                         <td>
-                                            <a href="/tyosuoritteet/<%= ts.tyosuorite_id %>" class="btn-primary btn-edit" style="text-decoration: none;">Tarkastele/Kirjaa</a>
+                                            <button onclick="location.href='/tyosuoritteet/<%= ts.tyosuorite_id %>'" class="btn-primary btn-edit">Tarkastele/Kirjaa</button>
                                         </td>
                                     </tr>
                                 <% }) %>

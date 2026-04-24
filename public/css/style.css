@@ -24,18 +24,13 @@ body {
 
 main.container {
     flex: 1;
-    /* Tämä täyttää kaiken vapaan pystytilan */
     width: 80%;
     margin: 1rem auto 2rem auto;
-    /* Pidetään pieni rako footeriin */
-
     background-color: #FFFFFF;
     border-radius: 10px;
     padding: 2rem;
-
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08),
         0 4px 10px rgba(0, 0, 0, 0.05);
-
     display: flex;
     flex-direction: column;
 }
@@ -154,17 +149,16 @@ footer {
 }
 
 .quick-actions {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 1.5rem;
-    flex: 1;
     margin-top: 1rem;
+    justify-content: center;
 }
 
 .action-card {
     background: #fff;
-    padding: 1rem;
+    padding: 1.5rem;
     border-radius: 12px;
     text-decoration: none;
     color: #2C3E50;
@@ -175,7 +169,9 @@ footer {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%;
+    flex: 0 1 calc(33.333% - 1rem);
+    min-width: 280px;
+    min-height: 250px;
 }
 
 .action-card:hover {
@@ -192,7 +188,6 @@ footer {
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    /* Kaksi tasakokoista saraketta */
     gap: 1.5rem;
     margin-bottom: 1.5rem;
 }
@@ -390,23 +385,6 @@ select option:disabled {
     color: #856404;
 }
 
-Ymmärrän,
-haet siis perinteistä pystysuuntaista A4-arkin ulkoasua,
-joka näkyy selkeänä "paperina" ruudulla (keskitettynä ja rajattuna),
-mutta täyttää paperin oikein tulostettaessa. Tämä on usein paras ratkaisu laskuille,
-koska se antaa käyttäjälle tarkan kuvan siitä,
-miltä lopputulos näyttää. Tässä on päivitetty koodi,
-jossa on käytetty aspect-ratio -asetusta ja tarkkoja mittoja A4-mallin simuloimiseksi. HTML <style>
-
-/* Tausta, joka saa "paperin" erottumaan */
-main.container {
-    background-color: #f0f2f5;
-    padding: 40px 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 /* A4-malli ruudulla */
 .invoice-container {
     background: white;
@@ -582,3 +560,4 @@ main.container {
         padding: 20mm;
         border: none !important;
     }
+}
