@@ -11,7 +11,8 @@
                         <section style="margin-bottom: 2rem; background: #f9f9f9; padding: 1rem; border-radius: 8px;">
                             <h3>Tuo toimittajan hinnasto (XML)</h3>
                             <p>Lataa XML-tiedosto päivittääksesi tarvikkeet ja siirtääksesi vanhat historiaan.</p>
-                            <form action="/tarvikkeet/tuo-hinnasto" method="POST" enctype="multipart/form-data" style="margin-top: 1rem;">
+                            <form action="/tarvikkeet/tuo-hinnasto" method="POST" enctype="multipart/form-data"
+                                style="margin-top: 1rem;">
                                 <input type="file" name="hinnasto" accept=".xml" required />
                                 <button type="submit" class="btn-primary">Päivitä Hinnasto</button>
                             </form>
@@ -19,30 +20,64 @@
 
                         <div class="page-header">
                             <h2>Tarvikkeet</h2>
-                            <button id="openModal" class="btn-primary">+ Lisää uusi lasku</button>
+                            <button id="openModal" class="btn-primary">+ Lisää uusi tarvike</button>
                         </div>
 
                         <table class="data-table">
                             <thead>
                                 <tr>
                                     <th>Tunnus</th>
-                                    <th>Asiakas</th>
-                                    <th>Työkohde</th>
-                                    <th>Päivämäärä</th>
-                                    <th>Eräpäivä</th>
-                                    <th>Summa</th>
-                                    <th>Maksettu</th>
+                                    <th>Nimi</th>
+                                    <th>Merkki</th>
+                                    <th>Saldo</th>
+                                    <th>Ostohinta</th>
+                                    <th>Myyntihinta</th>
+                                    <th>Toimittaja</th>
+                                    <th>Toiminnot</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                
+                                <% tarvikkeet.forEach(tarvike=> { %>
+                                    <tr>
+                                        <td><strong>
+                                                <%= tarvike.tarvike_id %>
+                                            </strong></td>
+                                        <td>
+                                            <%= tarvike.nimi %>
+                                        </td>
+                                        <td>
+                                            <%= tarvike.merkki %>
+                                        </td>
+                                        <td>
+                                            <%= tarvike.saldo %> (<%= tarvike.yksikko %>)
+                                        </td>
+                                        <td>
+                                            €<%= Number(tarvike.sisaanostohinta).toFixed(2) %>
+                                        </td>
+                                        <td>
+                                            €<%= Number(tarvike.myyntihinta).toFixed(2) %>
+                                        </td>
+                                        <td>
+                                            <%= tarvike.toimittaja_nimi || 'Ei määritetty' %>
+                                        </td>
+                                        <td>
+                                            <form action="/tarvikkeet/arkistoi/<%= tarvike.tarvike_id %>"
+                                                method="POST" style="display: inline;"
+                                                onsubmit="return confirm('Haluatko varmasti arkistoida tämän tarvikkeen?')">
+                                                <input type="hidden" name="tarvike_id"
+                                                    value="<%= tarvike.tarvike_id %>">
+                                                <button type="submit" class="btn-primary btn-delete">Arkistoi</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
                             </tbody>
                         </table>
 
                         <div id="customerModal" class="modal">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h3>Lisää uusi lasku</h3>
+                                    <h3>Lisää uusi tarvike</h3>
                                     <span class="close-btn">&times;</span>
                                 </div>
                                 <form action="/tarvikkeet/lisaa" method="POST">
@@ -66,7 +101,7 @@
                                     </div>
                                     <div class="form-actions">
                                         <button type="button" class="btn-primary btn-cancel close-btn">Peruuta</button>
-                                        <button type="submit" class="btn-primary">Tallenna asiakas</button>
+                                        <button type="submit" class="btn-primary">Tallenna tarvike</button>
                                     </div>
                                 </form>
                             </div>
@@ -75,17 +110,18 @@
         </div>
         <%- include('../partials/footer') %>
     </body>
-<script>
-    const modal = document.getElementById("customerModal");
-    const openBtn = document.getElementById("openModal");
-    const closeBtns = document.querySelectorAll(".close-btn");
+    <script>
+        const modal = document.getElementById("customerModal");
+        const openBtn = document.getElementById("openModal");
+        const closeBtns = document.querySelectorAll(".close-btn");
 
-    // Avaa ikkuna
-    openBtn.onclick = () => modal.style.display = "block";
+        // Avaa ikkuna
+        openBtn.onclick = () => modal.style.display = "block";
 
-    // Sulje ikkuna ruksista tai peruuta-namiskasta
-    closeBtns.forEach(btn => {
-        btn.onclick = () => modal.style.display = "none";
-    });
-</script>
+        // Sulje ikkuna ruksista tai peruuta-namiskasta
+        closeBtns.forEach(btn => {
+            btn.onclick = () => modal.style.display = "none";
+        });
+    </script>
+
 </html>

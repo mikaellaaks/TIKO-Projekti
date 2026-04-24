@@ -1,10 +1,13 @@
 import { type Request, type Response } from 'express';
 import { paivitaHinnasto } from '../models/tarvike_import';
+import * as TarvikeModel from '../models/tarvike';
 
-export const listTarvikkeet = (req: Request, res: Response) => {
+export const listTarvikkeet = async (req: Request, res: Response) => {
     try {
+        const tarvikkeet = await TarvikeModel.getAll();
         res.render('tarvikkeet/tarvikkeet', { 
             title: 'Tarvikkeet',
+            tarvikkeet: tarvikkeet
         });
     } catch (error) {
         console.error(error);
