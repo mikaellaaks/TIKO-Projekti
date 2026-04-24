@@ -8,20 +8,8 @@
                 <%- include('../partials/nav') %>
 
                     <main class="container">
-                        <section style="margin-bottom: 2rem; background: #f9f9f9; padding: 1rem; border-radius: 8px;">
-                            <h3>Tuo toimittajan hinnasto (XML)</h3>
-                            <p>Lataa XML-tiedosto päivittääksesi tarvikkeet ja siirtääksesi vanhat historiaan.</p>
-                            <form action="/tarvikkeet/tuo-hinnasto" method="POST" enctype="multipart/form-data"
-                                style="margin-top: 1rem;">
-                                <input type="file" name="hinnasto" accept=".xml" required />
-                                <button type="submit" class="btn-primary">Päivitä Hinnasto</button>
-                            </form>
-                        </section>
-
                         <div class="page-header">
-                            <h2>Tarvikkeet</h2>
-                            <button id="openModal" class="btn-primary">+ Lisää uusi tarvike</button>
-                            <button class="btn-primary" onclick="window.location.href='/tarvikkeet/arkistoidut'">Arkistoidut tarvikkeet</button>
+                            <h2>Arkistoidut tarvikkeet</h2>
                         </div>
 
                         <table class="data-table">
@@ -30,36 +18,35 @@
                                     <th>Tunnus</th>
                                     <th>Nimi</th>
                                     <th>Merkki</th>
-                                    <th>Saldo</th>
+                                    <th>Yksikkö</th>
                                     <th>Ostohinta</th>
                                     <th>Myyntihinta</th>
                                     <th>Toimittaja</th>
-                                    <th>Toiminnot</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <% tarvikkeet.forEach(tarvike=> { %>
+                                <% tarvikkeet.forEach(tarvike_historia=> { %>
                                     <tr>
                                         <td><strong>
-                                                <%= tarvike.tarvike_id %>
+                                                <%= tarvike_historia.tarvike_id %>
                                             </strong></td>
                                         <td>
-                                            <%= tarvike.nimi %>
+                                            <%= tarvike_historia.nimi %>
                                         </td>
                                         <td>
-                                            <%= tarvike.merkki %>
+                                            <%= tarvike_historia.merkki %>
                                         </td>
                                         <td>
-                                            <%= tarvike.saldo %> (<%= tarvike.yksikko %>)
+                                            <%= tarvike_historia.yksikko %>
                                         </td>
                                         <td>
-                                            €<%= Number(tarvike.sisaanostohinta).toFixed(2) %>
+                                            €<%= Number(tarvike_historia.sisaanostohinta).toFixed(2) %>
                                         </td>
                                         <td>
-                                            €<%= Number(tarvike.myyntihinta).toFixed(2) %>
+                                            €<%= Number(tarvike_historia.myyntihinta).toFixed(2) %>
                                         </td>
                                         <td>
-                                            <%= tarvike.toimittaja_nimi || 'Ei määritetty' %>
+                                            <%= tarvike_historia.toimittaja_nimi || 'Ei määritetty' %>
                                         </td>
                                         <td>
                                             <form action="/tarvikkeet/arkistoi/<%= tarvike.tarvike_id %>"

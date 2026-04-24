@@ -1,6 +1,7 @@
 import { type Request, type Response } from 'express';
 import { paivitaHinnasto } from '../models/tarvike_import';
 import * as TarvikeModel from '../models/tarvike';
+import * as TarvikeHistoriaModel from '../models/tarvike_historia';
 
 export const listTarvikkeet = async (req: Request, res: Response) => {
     try {
@@ -31,5 +32,18 @@ export const tuoHinnasto = async (req: Request, res: Response) => {
     } catch (error) {
         console.error('XML tuonti epäonnistui:', error);
         res.status(500).send('Virhe hinnaston päivityksessä.');
+    }
+};
+
+export const listArkistoidutTarvikkeet = async (req: Request, res: Response) => {
+    try {
+        const arkistoidut = await TarvikeHistoriaModel.getAll();
+        res.render('tarvikkeet/arkistoidut', {
+            title: 'Arkistoidut tarvikkeet',
+            tarvikkeet: arkistoidut
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Virhe haettaessa arkistoituja tarvikkeita.");
     }
 };
