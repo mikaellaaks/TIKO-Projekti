@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fi">
+<%- include('../partials/head') %>
+<body>
+    <div class="content-wrapper">
+        <%- include('../partials/header') %>
+        <%- include('../partials/nav') %>
+
+        <main class="container">
+            <div class="breadcrumb">
+                <a href="/tyokohteet">← Takaisin työkohteet</a>
+            </div>
+
+            <section class="info-card">
+                <h2>Hinta-arvio - <%= tyokohde.nimi %></h2>
+                <p><strong>Osoite:</strong> <%= tyokohde.osoite %></p>
+            </section>
+
+            <section class="info-card">
+                <h3>Tuntityöt</h3>
+                <% if (tulos.tuntirivit.length === 0) { %>
+                    <p class="muted-text">Ei tuntitöitä kirjattuna</p>
+                <% } else { %>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Tyyppi</th>
+                            <th>Määrä (h)</th>
+                            <th>Yksikköhinta (€/h)</th>
+                            <th>Yhteensä (€)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% tulos.tuntirivit.forEach(rivi => { %>
+                            <tr>
+                                <td><%= rivi.nimi %></td>
+                                <td><%= rivi.maara %></td>
+                                <td><%= rivi.yksikkohinta %></td>
+                                <td><%= rivi.hinta.toFixed(2) %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+                <% } %>
+            </section>
+
+            <section class="info-card">
+                <h3>Tarvikkeet</h3>
+                <% if (tulos.tarvikerivit.length === 0) { %>
+                    <p class="muted-text">Ei tarvikkeita kirjattuna</p>
+                <% } else { %>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nimi</th>
+                            <th>Määrä</th>
+                            <th>Yksikköhinta (€)</th>
+                            <th>Yhteensä (€)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% tulos.tarvikerivit.forEach(rivi => { %>
+                            <tr>
+                                <td><%= rivi.nimi %></td>
+                                <td><%= rivi.maara %></td>
+                                <td><%= rivi.yksikkohinta %></td>
+                                <td><%= rivi.hinta.toFixed(2) %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+                <% } %>
+            </section>
+
+            <section class="info-card">
+                <h3>Yhteenveto</h3>
+                <table class="data-table">
+                    <tbody>
+                        <tr>
+                            <td>Tuntityöt yhteensä (alv 0%)</td>
+                            <td><%= tulos.tyo_yhteensa.toFixed(2) %> €</td>
+                        </tr>
+                        <tr>
+                            <td>Tarvikkeet yhteensä (alv 0%)</td>
+                            <td><%= tulos.tarvike_yhteensa.toFixed(2) %> €</td>
+                        </tr>
+                        <tr>
+                            <td>ALV 24%</td>
+                            <td><%= tulos.alv.toFixed(2) %> €</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kokonaissumma</strong></td>
+                            <td><strong><%= tulos.kokonaissumma.toFixed(2) %> €</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Kotitalousvähennyskelpoinen osuus</td>
+                            <td><%= tulos.kotitalousvahennys.toFixed(2) %> €</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <%- include('../partials/footer') %>
+</body>
+</html>

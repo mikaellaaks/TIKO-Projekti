@@ -41,6 +41,7 @@
                                             </a>
                                         </td>
                                         <td>
+                                            <a href="/tyokohteet/<%= tyokohde.tyokohde_id %>/hinta-arvio" class="btn btn-edit">Hinta-arvio</a>
                                             <form action="/tyokohteet/poista/<%= tyokohde.tyokohde_id %>" method="POST"
                                                 style="display: inline;"
                                                 onsubmit="return confirm('Haluatko varmasti poistaa tämän työkohteen?')">
