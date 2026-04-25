@@ -2,6 +2,7 @@ import { type Request, type Response } from 'express';
 import * as TyokohdeModel from '../models/tyokohde';
 import * as AsiakasModel from '../models/asiakas';
 
+// Muodosta lista kaikista työkohteista
 export const listTyokohteet = async (req: Request, res: Response) => {
     try {
         const [tyokohteet, asiakkaat] = await Promise.all([
@@ -20,6 +21,7 @@ export const listTyokohteet = async (req: Request, res: Response) => {
     }
 };
 
+// Muodosta yksittäinen työkohdesivu
 export const getTyokohdeDetail = async (req: Request, res: Response) => {
     try {
         const id = parseInt(String(req.params.id));
@@ -44,6 +46,7 @@ export const getTyokohdeDetail = async (req: Request, res: Response) => {
     }
 };
 
+// Luo uusi työkohde
 export const createTyokohde = async (req: Request, res: Response) => {
     try {
         const { nimi, osoite, asiakas_id } = req.body;
@@ -61,6 +64,7 @@ export const createTyokohde = async (req: Request, res: Response) => {
     }
 };
 
+// Poista työkohde
 export const deleteTyokohde = async (req: Request, res: Response) => {
     try {
         const id = parseInt(String(req.params.id));
@@ -75,6 +79,7 @@ export const deleteTyokohde = async (req: Request, res: Response) => {
     }
 };
 
+// Muodosta hinta-arvio 
 export const getHintaArvio = async (req: Request, res: Response) => {
     try {
         const id = parseInt(String(req.params.id));

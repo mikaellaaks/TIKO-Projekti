@@ -128,6 +128,8 @@ export async function addMuistutusLasku(): Promise<Lasku[]> {
     client.release();
   }
 }
+
+// Hae laskun kaikki tiedot
 export const getFullLaskuDetails = async (id: number) => {
   const query = `
     SELECT 
@@ -147,7 +149,6 @@ export const getFullLaskuDetails = async (id: number) => {
 
   if (!laskuBase) return null;
 
-  // TÄRKEÄ MUUTOS: Lisätty JOIN tyohinnasto
   const tunnitRes = await pool.query(`
     SELECT 
         tt.*, 

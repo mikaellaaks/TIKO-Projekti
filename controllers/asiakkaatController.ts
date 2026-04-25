@@ -3,6 +3,7 @@ import * as AsiakasModel from '../models/asiakas';
 import * as TyokohdeModel from '../models/tyokohde';
 import * as LaskuModel from '../models/lasku';
 
+// Muodosta lista kaikista asiakkaista
 export const listAsiakkaat = async (req: Request, res: Response) => {
     try {
         const asiakkaat = await AsiakasModel.getAll();
@@ -16,6 +17,7 @@ export const listAsiakkaat = async (req: Request, res: Response) => {
     }
 };
 
+// Muodosta yksittäinen asiakassivu
 export const getAsiakasDetail = async (req: Request, res: Response) => {
     try {
         const id = parseInt(String(req.params.id));
@@ -45,6 +47,7 @@ export const getAsiakasDetail = async (req: Request, res: Response) => {
     }
 };
 
+// Luo uusi asiakas
 export const createAsiakas = async (req: Request, res: Response) => {
     try {
         const { nimi, osoite, email, puhelinnro } = req.body;

@@ -1,6 +1,7 @@
 import { type Request, type Response } from 'express';
 import * as ToimittajaModel from '../models/toimittaja';
 
+// Muodosta lista kaikista toimittajista
 export const listToimittajat = async (req: Request, res: Response) => {
     try {
         const toimittajat = await ToimittajaModel.getAll();
@@ -14,6 +15,7 @@ export const listToimittajat = async (req: Request, res: Response) => {
     }
 };
 
+// Luo uusi toimittaja
 export const createToimittaja = async (req: Request, res: Response) => {
     try {
         const { nimi } = req.body;
@@ -32,6 +34,7 @@ export const createToimittaja = async (req: Request, res: Response) => {
     }
 };
 
+// Poista toimittaja
 export const deleteToimittaja = async (req: Request, res: Response) => {
     try {
         const id = parseInt(String(req.params.id));

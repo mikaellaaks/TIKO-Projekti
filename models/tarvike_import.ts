@@ -1,6 +1,7 @@
 import pool from '../db';
 import { XMLParser } from 'fast-xml-parser';
 
+// Päivitä hinnasto XML tiedoston perusteella
 export async function paivitaHinnasto(xmlData: string): Promise<string> {
     const parser = new XMLParser({
         ignoreAttributes: false,
