@@ -70,6 +70,11 @@ INSERT INTO tyosuorite_tunti (tunti_id, tyosuorite_id, tyyppi, maara, alennus_pr
 INSERT INTO tyosuorite_tunti (tunti_id, tyosuorite_id, tyyppi, maara, alennus_prosentti) VALUES (13, 9, 'työ', 12, 0);
 INSERT INTO tyosuorite_tarvike (suorite_tarvike_id, tyosuorite_id, tarvike_id, maara, alennus_prosentti) VALUES (9, 9, 5, 3, 0);
 
+/* URAKKASOPIMUKSET */
+INSERT INTO urakkasopimus(urakkasopimus_id, asiakas_id, tyokohde_id, suunnittelu_tunnit, tyo_tunnit, alennus_prosentti, hintakorotus_prosentti) VALUES (1, 1, 1, 10, 5, 10, 0);
+INSERT INTO urakkasopimus(urakkasopimus_id, asiakas_id, tyokohde_id, suunnittelu_tunnit, tyo_tunnit, alennus_prosentti, hintakorotus_prosentti) VALUES (2, 2, 1, 50, 0, 0, 10);
+INSERT INTO urakkasopimus(urakkasopimus_id, asiakas_id, tyokohde_id, suunnittelu_tunnit, tyo_tunnit, alennus_prosentti, hintakorotus_prosentti) VALUES (3, 2, 2, 10, 10, 0, 10);
+
 /* TYÖTYYPPIEN HINNAT */
 INSERT INTO tyotyyppi (tyyppi, yksikkohinta) VALUES ('suunnittelu', 55.00);
 INSERT INTO tyotyyppi (tyyppi, yksikkohinta) VALUES ('työ', 45.00);
