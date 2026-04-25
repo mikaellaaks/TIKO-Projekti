@@ -17,8 +17,8 @@
                             <thead>
                                 <tr>
                                     <th>Tunnus</th>
-                                    <th>Asiakas ID</th>
-                                    <th>Työkohde ID</th>
+                                    <th>Asiakas</th>
+                                    <th>Työkohde</th>
                                     <th>Päivämäärä</th>
                                     <th>Suunnittelutunnit</th>
                                     <th>Työtunnit</th>
@@ -27,18 +27,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <% urakkasopimukset.forEach(urakka => { %>
+                                <% urakkasopimukset.forEach(urakka=> { %>
                                     <tr>
-                                        <td><%= urakka.urakkasopimus_id %></td>
-                                        <td><%= urakka.asiakas_id %></td>
-                                        <td><%= urakka.tyokohde_id %></td>
-                                        <td><%= new Date(urakka.luotu_pvm).toLocaleDateString('fi-FI') %></td>
-                                        <td><%= urakka.suunnittelu_tunnit %> h</td>
-                                        <td><%= urakka.tyo_tunnit %> h</td>
-                                        <td><%= urakka.hyvaksytty ? 'Kyllä' : 'Ei' %></td>
-                                        <td><a href="/urakkasopimukset/<%= urakka.urakkasopimus_id %>/tarjous" class="btn-primary">Näytä tarjous</a></td>
+                                        <td>
+                                            <%= urakka.urakkasopimus_id %>
+                                        </td>
+                                        <td>
+                                            <%= urakka.asiakas_nimi %>
+                                        </td>
+                                        <td>
+                                            <%= urakka.tyokohde_nimi %>
+                                        </td>
+                                        <td>
+                                            <%= new Date(urakka.luotu_pvm).toLocaleDateString('fi-FI') %>
+                                        </td>
+                                        <td>
+                                            <%= urakka.suunnittelu_tunnit %> h
+                                        </td>
+                                        <td>
+                                            <%= urakka.tyo_tunnit %> h
+                                        </td>
+                                        <td>
+                                            <%= urakka.hyvaksytty ? 'Kyllä' : 'Ei' %>
+                                        </td>
+                                        <td><button onclick="window.location.href='/urakkasopimukset/<%= urakka.urakkasopimus_id %>/tarjous'"
+                                                class="btn-primary">Näytä tarjous</button></td>
                                     </tr>
-                                <% }) %>
+                                    <% }) %>
                             </tbody>
                         </table>
 
@@ -51,12 +66,29 @@
                                 <form action="/urakkasopimukset/lisaa" method="POST">
                                     <div class="form-grid">
                                         <div class="form-group">
-                                            <label>Asiakas ID</label>
-                                            <input type="number" name="asiakas_id" required>
+                                            <label>Asiakas</label>
+                                            <select name="asiakas_id" id="asiakasSelect" required>
+                                                <option value="" disabled selected>Valitse asiakas...</option>
+                                                <% (locals.asiakkaat || []).forEach(asiakas=> { %>
+                                                    <option value="<%= asiakas.asiakas_id %>">
+                                                        <%= asiakas.nimi %>
+                                                    </option>
+                                                    <% }) %>
+                                            </select>
                                         </div>
+
                                         <div class="form-group">
-                                            <label>Työkohde ID</label>
-                                            <input type="number" name="tyokohde_id" required>
+                                            <label>Työkohde</label>
+                                            <select name="tyokohde_id" id="tyokohdeSelect" required>
+                                                <option value="" disabled selected>Valitse työkohde...</option>
+                                                </option>
+                                                <% (locals.tyokohteet || []).forEach(kohde=> { %>
+                                                    <option value="<%= kohde.tyokohde_id %>"
+                                                        data-asiakas="<%= kohde.asiakas_id %>">
+                                                        <%= kohde.nimi %> (<%= kohde.osoite %>)
+                                                    </option>
+                                                    <% }) %>
+                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <label>Suunnittelutunnit</label>
@@ -78,21 +110,54 @@
                                 </form>
                             </div>
                         </div>
+                        <script>
+                            const asiakasSelect = document.getElementById('asiakasSelect');
+                            const tyokohdeSelect = document.getElementById('tyokohdeSelect');
+                            const tyokohdeOptions = Array.from(tyokohdeSelect.options);
+
+                            asiakasSelect.addEventListener('change', function () {
+                                const valittuAsiakasId = this.value;
+
+                                // Aktivoidaan työkohde-valikko
+                                tyokohdeSelect.disabled = false;
+
+                                // Nollataan aiempi valinta
+                                tyokohdeSelect.value = "";
+
+                                // Suodatetaan näkyvyys
+                                tyokohdeOptions.forEach(option => {
+                                    const kohdeAsiakasId = option.getAttribute('data-asiakas');
+
+                                    // Näytetään vain valitun asiakkaan kohteet (ja pidetään tyhjä oletusvaihtoehto)
+                                    if (!kohdeAsiakasId || kohdeAsiakasId === valittuAsiakasId) {
+                                        option.style.display = "block";
+                                        option.disabled = false;
+                                    } else {
+                                        option.style.display = "none";
+                                        option.disabled = true;
+                                    }
+                                });
+
+                                // Muutetaan ohjeteksti
+                                tyokohdeSelect.options[0].textContent = "Valitse työkohde...";
+                            });
+                        </script>
                     </main>
         </div>
         <%- include('../partials/footer') %>
     </body>
-<script>
-    const modal = document.getElementById("customerModal");
-    const openBtn = document.getElementById("openModal");
-    const closeBtns = document.querySelectorAll(".close-btn");
+    <script>
+        const modal = document.getElementById("customerModal");
+        const openBtn = document.getElementById("openModal");
+        const closeBtns = document.querySelectorAll(".close-btn");
 
-    // Avaa ikkuna
-    openBtn.onclick = () => modal.style.display = "block";
+        // Avaa ikkuna
+        openBtn.onclick = () => modal.style.display = "block";
 
-    // Sulje ikkuna ruksista tai peruuta-namiskasta
-    closeBtns.forEach(btn => {
-        btn.onclick = () => modal.style.display = "none";
-    });
-</script>
+        // Sulje ikkuna ruksista tai peruuta-namiskasta
+        closeBtns.forEach(btn => {
+            btn.onclick = () => modal.style.display = "none";
+        });
+    </script>
+
 </html>

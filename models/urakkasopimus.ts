@@ -12,8 +12,18 @@ export interface Urakkasopimus {
 }
 
 // Hae kaikki urakat
-export async function getAll(): Promise<Urakkasopimus[]> {
-  const { rows } = await pool.query<Urakkasopimus>('SELECT * FROM urakkasopimus');
+export async function getAll(): Promise<any[]> {
+  const query = `
+    SELECT 
+      u.*, 
+      a.nimi AS asiakas_nimi, 
+      t.nimi AS tyokohde_nimi 
+    FROM urakkasopimus u
+    LEFT JOIN asiakas a ON u.asiakas_id = a.asiakas_id
+    LEFT JOIN tyokohde t ON u.tyokohde_id = t.tyokohde_id
+    ORDER BY u.luotu_pvm DESC
+  `;
+  const { rows } = await pool.query(query);
   return rows;
 }
 

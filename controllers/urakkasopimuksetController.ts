@@ -1,13 +1,19 @@
 import { type Request, type Response } from 'express';
 import * as urakkasopimusModel from '../models/urakkasopimus';
+import * as asiakasModel from '../models/asiakas';
+import * as tyokohdeModel from '../models/tyokohde';
 
 // Muodosta lista kaikista urakkasopimuksista
 export const listUrakkasopimukset = async (req: Request, res: Response) => {
     try {
         const urakkasopimukset = await urakkasopimusModel.getAll();
+        const asiakkaat = await asiakasModel.getAll();
+        const tyokohteet = await tyokohdeModel.getAll();
         res.render('urakkasopimukset/urakkasopimukset', { 
             title: 'Urakkasopimukset',
             urakkasopimukset: urakkasopimukset,
+            asiakkaat: asiakkaat,
+            tyokohteet: tyokohteet,
             virheviesti: null
         });
     } catch (virhe) {
@@ -15,6 +21,8 @@ export const listUrakkasopimukset = async (req: Request, res: Response) => {
         res.render('urakkasopimukset/urakkasopimukset', { 
             title: 'Urakkasopimukset',
             urakkasopimukset: [],
+            asiakkaat: [],
+            tyokohteet: [],
             virheviesti: "Tietokantavirhe urakkasopimuksia haettaessa."
         });
     }
