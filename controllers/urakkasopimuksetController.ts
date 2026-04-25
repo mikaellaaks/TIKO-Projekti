@@ -1,6 +1,7 @@
 import { type Request, type Response } from 'express';
 import * as urakkasopimusModel from '../models/urakkasopimus';
 
+// Muodosta lista kaikista urakkasopimuksista
 export const listUrakkasopimukset = async (req: Request, res: Response) => {
     try {
         const urakkasopimukset = await urakkasopimusModel.getAll();
@@ -19,6 +20,7 @@ export const listUrakkasopimukset = async (req: Request, res: Response) => {
     }
 };
 
+// Luo uusi urakkasopimus
 export const lisaaUrakkasopimus = async (req: Request, res: Response) => {
     try {
         const { asiakas_id, tyokohde_id, suunnittelu_tunnit, tyo_tunnit, alennus_prosentti } = req.body;
@@ -37,6 +39,7 @@ export const lisaaUrakkasopimus = async (req: Request, res: Response) => {
     }
 };
 
+// Laske kokonaiskustannus urakkasopimukselle
 export const laskeKokonaisKustannus = (urakkaRaportti: any) => {
     const SUUNNITTELU_HINTA_ALV = 55;
     const TYOMASENNUS_HINTA_ALV = 45;
@@ -74,6 +77,7 @@ export const laskeKokonaisKustannus = (urakkaRaportti: any) => {
     };
 };
 
+// Muodosta tarjous urakkasopimuksesta
 export const getTarjous = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
@@ -98,6 +102,7 @@ export const getTarjous = async (req: Request, res: Response) => {
   }
 };
 
+// Hyväksy urakkatarjous
 export const hyvaksyUrakka = async (req: Request, res: Response) => {
     try {
         const id = Number(req.params.id);

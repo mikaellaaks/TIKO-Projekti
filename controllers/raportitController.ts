@@ -1,6 +1,7 @@
 import pool from '../db';
 import { type Request, type Response } from 'express';
 
+// Hae raportti
 export const getJunkCoRaportti = async (req: Request, res: Response) => {
     try {
         const sql = `

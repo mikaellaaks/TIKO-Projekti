@@ -3,6 +3,7 @@ import { paivitaHinnasto } from '../models/tarvike_import';
 import * as TarvikeModel from '../models/tarvike';
 import * as TarvikeHistoriaModel from '../models/tarvike_historia';
 
+// Muodosta lista kaikista tarvikkeista
 export const listTarvikkeet = async (req: Request, res: Response) => {
     try {
         const tarvikkeet = await TarvikeModel.getAll();
@@ -16,6 +17,7 @@ export const listTarvikkeet = async (req: Request, res: Response) => {
     }
 };
 
+// Päivitä tarvikehinnasto XML-formaatissa olevasta hinnastotiedostosta
 export const tuoHinnasto = async (req: Request, res: Response) => {
     if (!req.file) {
         return res.status(400).send('Ei tiedostoa mukana.');
@@ -35,6 +37,7 @@ export const tuoHinnasto = async (req: Request, res: Response) => {
     }
 };
 
+// Listaa arkistoidut tarvikkeet
 export const listArkistoidutTarvikkeet = async (req: Request, res: Response) => {
     try {
         const arkistoidut = await TarvikeHistoriaModel.getAll();

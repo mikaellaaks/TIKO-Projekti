@@ -4,6 +4,7 @@ import * as asiakasModel from '../models/asiakas';
 import * as tyokohdeModel from '../models/tyokohde';
 import pool from '../db';
 
+// Muodosta lista kaikista laskuista
 export const listLaskut = async (req: Request, res: Response) => {
   try {
     const laskut = await laskuModel.getAll();
@@ -22,6 +23,7 @@ export const listLaskut = async (req: Request, res: Response) => {
   }
 };
 
+// Muodosta yksittäinen laskusivu
 export const getLaskuDetail = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
@@ -43,7 +45,6 @@ export const getLaskuDetail = async (req: Request, res: Response) => {
       const perushinta = HINNAT[t.tyyppi as keyof typeof HINNAT] || 0;
       // Muunnetaan alennusprosentti kertoimeksi 
       const alennusKerroin = 1 - (Number(t.alennus_prosentti || 0) / 100);
-      
       const riviVeroton = t.maara * perushinta * alennusKerroin;
       tyonOsuusVeroton += riviVeroton;
       
@@ -54,7 +55,7 @@ export const getLaskuDetail = async (req: Request, res: Response) => {
     lasku.tarvikkeet.forEach((t: any) => {
       const yksikkohinta = Number(t.myyntihinta);
       const alennusKerroin = 1 - (Number(t.alennus_prosentti || 0) / 100);
-      const alvKanta = Number(t.alv || 0.24); // Käytetään tuotteen omaa ALV-kantaa
+      const alvKanta = Number(t.alv || 0.24);
 
       const riviVeroton = t.maara * yksikkohinta * alennusKerroin;
       tarvikeOsuusVeroton += riviVeroton;
@@ -89,6 +90,7 @@ export const getLaskuDetail = async (req: Request, res: Response) => {
   }
 };
 
+// Luo uusi lasku
 export const createLasku = async (req: Request, res: Response) => {
   try {
     const { asiakas_id, tyokohde_id, ...laskuData } = req.body;
@@ -108,6 +110,7 @@ export const createLasku = async (req: Request, res: Response) => {
   }
 };
 
+// Merkitse lasku masketuksi
 export const markAsPaid = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
@@ -119,6 +122,7 @@ export const markAsPaid = async (req: Request, res: Response) => {
   }
 };
 
+// Muodostaa muistutus/karhulaskut
 export const createReminders = async (req: Request, res: Response) => {
   try {
     const uudetLaskut = await laskuModel.addMuistutusLasku();
@@ -130,6 +134,7 @@ export const createReminders = async (req: Request, res: Response) => {
     res.redirect('/laskut?msg=' + encodeURIComponent('Virhe muistutuslaskujen käsittelyssä.'));
   }
 };
+
 
 export const naytaLasku = async (req: Request, res: Response) => {
     try {

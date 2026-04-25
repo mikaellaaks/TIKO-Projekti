@@ -8,6 +8,7 @@ export interface TyosuoriteTarvike {
   alennus_prosentti: number;
 }
 
+// Lisää uusi työsuoritetarvike
 export async function add(data: Omit<TyosuoriteTarvike, 'suorite_tarvike_id'>): Promise<TyosuoriteTarvike> {
   const { tyosuorite_id, tarvike_id, maara, alennus_prosentti } = data;
   const { rows } = await pool.query<TyosuoriteTarvike>(
@@ -17,6 +18,7 @@ export async function add(data: Omit<TyosuoriteTarvike, 'suorite_tarvike_id'>): 
   return rows[0] as TyosuoriteTarvike;
 }
 
+// Hae työsuoritetarvikkeet ID:n perusteella
 export async function getByTyosuoriteId(tyosuorite_id: number): Promise<any[]> {
   const { rows } = await pool.query(
     `SELECT tt.*, t.nimi AS tarvike_nimi, t.yksikko

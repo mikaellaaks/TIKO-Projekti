@@ -4,6 +4,7 @@ import * as TyosuoriteTunti from '../models/tyosuorite_tunti';
 import * as TyosuoriteTarvike from '../models/tyosuorite_tarvike';
 import * as Tarvike from '../models/tarvike';
 
+// Muodosta lista kaikista työsuoritteista
 export const listTyosuoritteet = async (req: Request, res: Response) => {
   try {
     const tyosuoritteet = await tyosuoriteModel.getAll();
@@ -17,6 +18,7 @@ export const listTyosuoritteet = async (req: Request, res: Response) => {
   }
 };
 
+// Muodosta yksittäinen työsuoritesivu
 export const getTyosuoriteDetail = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
@@ -43,6 +45,7 @@ export const getTyosuoriteDetail = async (req: Request, res: Response) => {
   }
 };
 
+// Lisää uusi kirjaus työsuoritteisiin
 export const createKirjaus = async (req: Request, res: Response) => {
     try {
         const tyosuorite_id = parseInt(req.params.id as string, 10);
