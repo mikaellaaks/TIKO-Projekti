@@ -60,9 +60,12 @@
                     </div>
                     <div class="term-item">
                         <span>Viitenumero</span>
-                        <strong><%= 1000 + lasku.laskunro %></strong> </div>
+                        <strong><%= 1000 + lasku.laskunro %></strong>
+                    </div>
                 </div>
 
+                <%# TUNTIERITTELY %>
+                <h4 style="margin-top: 1.5rem;">Työ</h4>
                 <table class="invoice-table">
                     <thead>
                         <tr>
@@ -75,56 +78,109 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% let yhteensaAlv0 = 0; %>
-                        <% lasku.tunnit.forEach(tunti => { 
-                            let hinta = Number(tunti.maara || 0) * Number(tunti.yksikkohinta || 0);
-                            let alennus = hinta * (Number(tunti.alennus_prosentti || 0) / 100);
-                            let riviSumma = hinta - alennus;
-                            yhteensaAlv0 += riviSumma;
-                        %>
+                        <% tuntiErittely.forEach(function(t) { %>
                         <tr>
-                            <td>Työsuorite: <%= tunti.tyyppi %></td>
-                            <td class="text-right"><%= tunti.maara %> h</td>
-                            <td class="text-right"><%= Number(tunti.yksikkohinta).toFixed(2) %> €</td>
-                            <td class="text-right"><%= tunti.alv %>%</td>
-                            <td class="text-right"><%= tunti.alennus_prosentti %>%</td>
-                            <td class="text-right"><%= riviSumma.toFixed(2) %> €</td>
-                        </tr>
-                        <% }) %>
-
-                        <% lasku.tarvikkeet.forEach(t => { 
-                            let hinta = Number(t.maara || 0) * Number(t.myyntihinta || 0);
-                            let alennus = hinta * (Number(t.alennus_prosentti || 0) / 100);
-                            let riviSumma = hinta - alennus;
-                            yhteensaAlv0 += riviSumma;
-                        %>
-                        <tr>
-                            <td>Tarvike: <%= t.nimi %></td>
-                            <td class="text-right"><%= t.maara %> kpl</td>
-                            <td class="text-right"><%= Number(t.myyntihinta).toFixed(2) %> €</td>
-                            <td class="text-right"><%= t.alv %>%</td>
-                            <td class="text-right"><%= t.alennus_prosentti %>%</td>
-                            <td class="text-right"><%= riviSumma.toFixed(2) %> €</td>
+                            <td>Työsuorite: <%= t.tyyppi %></td>
+                            <td class="text-right"><%= t.maara %> h</td>
+                            <td class="text-right"><%= Number(t.yksikkohinta).toFixed(2) %> €</td>
+                            <td class="text-right"><%= (t.alvKanta * 100).toFixed(1) %>%</td>
+                            <td class="text-right"><%= t.alennusProsentti > 0 ? t.alennusProsentti + '%' : '-' %></td>
+                            <td class="text-right">
+                                <% if (t.alennusProsentti > 0) { %>
+                                    <span style="text-decoration: line-through; color: #999; font-size: 0.9em;">
+                                        <%= t.alkuperainenVeroton.toFixed(2) %> €
+                                    </span><br>
+                                    <strong><%= t.riviVeroton.toFixed(2) %> €</strong>
+                                <% } else { %>
+                                    <%= t.riviVeroton.toFixed(2) %> €
+                                <% } %>
+                            </td>
                         </tr>
                         <% }) %>
                     </tbody>
                 </table>
 
+                <%# TARVIKE-ERITTELY %>
+                <h4 style="margin-top: 1.5rem;">Tarvikkeet</h4>
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th>Kuvaus</th>
+                            <th class="text-right">Määrä</th>
+                            <th class="text-right">Yksikköhinta</th>
+                            <th class="text-right">ALV</th>
+                            <th class="text-right">Ale %</th>
+                            <th class="text-right">Yhteensä (alv 0%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% tarvikeErittely.forEach(function(t) { %>
+                        <tr>
+                            <td>Tarvike: <%= t.nimi %></td>
+                            <td class="text-right"><%= t.maara %> kpl</td>
+                            <td class="text-right"><%= Number(t.yksikkohinta).toFixed(2) %> €</td>
+                            <td class="text-right"><%= (t.alvKanta * 100).toFixed(1) %>%</td>
+                            <td class="text-right"><%= t.alennusProsentti > 0 ? t.alennusProsentti + '%' : '-' %></td>
+                            <td class="text-right">
+                                <% if (t.alennusProsentti > 0) { %>
+                                    <span style="text-decoration: line-through; color: #999; font-size: 0.9em;">
+                                        <%= t.alkuperainenVeroton.toFixed(2) %> €
+                                    </span><br>
+                                    <strong><%= t.riviVeroton.toFixed(2) %> €</strong>
+                                <% } else { %>
+                                    <%= t.riviVeroton.toFixed(2) %> €
+                                <% } %>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+
+                <%# YHTEENVETO %>
                 <div class="summary-section">
                     <div class="summary-box">
                         <table class="summary-table">
                             <tr>
-                                <td>Veroton yhteensä:</td>
-                                <td class="text-right"><%= yhteensaAlv0.toFixed(2) %> €</td>
+                                <td>Työ (alv 0%):</td>
+                                <td class="text-right"><%= tyonOsuusVeroton.toFixed(2) %> €</td>
                             </tr>
                             <tr>
-                                <td>ALV-osuus:</td>
-                                <td class="text-right"><%= (Number(lasku.kokonaissumma) - yhteensaAlv0).toFixed(2) %> €</td>
+                                <td>Tarvikkeet (alv 0%):</td>
+                                <td class="text-right"><%= tarvikeOsuusVeroton.toFixed(2) %> €</td>
                             </tr>
+                            <tr>
+                                <td>Veroton yhteensä:</td>
+                                <td class="text-right"><%= (tyonOsuusVeroton + tarvikeOsuusVeroton).toFixed(2) %> €</td>
+                            </tr>
+                            <tr><td colspan="2"><hr></td></tr>
+                            <% if (alv10Summa > 0) { %>
+                            <tr>
+                                <td>ALV 10%:</td>
+                                <td class="text-right"><%= alv10Summa.toFixed(2) %> €</td>
+                            </tr>
+                            <% } %>
+                            <tr>
+                                <td>ALV 24%:</td>
+                                <td class="text-right"><%= alv24Summa.toFixed(2) %> €</td>
+                            </tr>
+                            <tr>
+                                <td>ALV yhteensä:</td>
+                                <td class="text-right"><%= alvYhteensa.toFixed(2) %> €</td>
+                            </tr>
+                            <tr><td colspan="2"><hr></td></tr>
                             <tr class="total-row">
                                 <td><strong>MAKSETTAVA YHTEENSÄ:</strong></td>
-                                <td class="text-right"><strong><%= Number(lasku.kokonaissumma).toFixed(2) %> €</strong></td>
+                                <td class="text-right"><strong><%= kokonaissumma.toFixed(2) %> €</strong></td>
                             </tr>
+                            <tr><td colspan="2"><hr></td></tr>
+                            <%# Kotitalousvähennysosio %>
+                            <tr>
+                                <td colspan="2"><strong>Kotitalousvähennys</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Kotitalousvähennyskelpoinen osuus (työ sis. alv):</td>
+                                <td class="text-right"><%= kotitalousvahennyskelpoinen.toFixed(2) %> €</td>
+                            </tr>               
                         </table>
                     </div>
                 </div>
