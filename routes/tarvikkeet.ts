@@ -14,4 +14,7 @@ router.post('/tuo-hinnasto', upload.single('hinnasto'), tarvikkeetController.tuo
 // 3. REITTI: Arkistoituden tarvikkeiden lista
 router.get('/arkistoidut', tarvikkeetController.listArkistoidutTarvikkeet);
 
+// 4. REITTI: Tarvikkeen lisääminen
+router.post('/lisaa', tarvikkeetController.createTarvike);
+
 export default router;

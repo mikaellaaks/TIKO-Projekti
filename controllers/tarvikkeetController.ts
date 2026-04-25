@@ -2,14 +2,17 @@ import { type Request, type Response } from 'express';
 import { paivitaHinnasto } from '../models/tarvike_import';
 import * as TarvikeModel from '../models/tarvike';
 import * as TarvikeHistoriaModel from '../models/tarvike_historia';
+import * as ToimittajaModel from '../models/toimittaja';
 
 // Muodosta lista kaikista tarvikkeista
 export const listTarvikkeet = async (req: Request, res: Response) => {
     try {
         const tarvikkeet = await TarvikeModel.getAll();
+        const toimittajat = await ToimittajaModel.getAll();
         res.render('tarvikkeet/tarvikkeet', { 
             title: 'Tarvikkeet',
-            tarvikkeet: tarvikkeet
+            tarvikkeet: tarvikkeet,
+            toimittaja: toimittajat
         });
     } catch (error) {
         console.error(error);
@@ -48,5 +51,32 @@ export const listArkistoidutTarvikkeet = async (req: Request, res: Response) => 
     } catch (error) {
         console.error(error);
         res.status(500).send("Virhe haettaessa arkistoituja tarvikkeita.");
+    }
+};
+
+// Lisää uusi tarvike
+export const createTarvike = async (req: Request, res: Response) => {
+    try {
+        const { nimi, merkki, yksikko, saldo, sisaanostohinta, myyntihinta, alv, toimittaja_id } = req.body;
+
+        if (!nimi || !merkki || !yksikko) {
+            return res.status(400).send("Pakollisia kenttiä puuttuu");
+        }
+
+        await TarvikeModel.add({
+            nimi: nimi,
+            merkki: merkki,
+            yksikko: yksikko,
+            saldo: saldo,
+            sisaanostohinta: sisaanostohinta,
+            myyntihinta: myyntihinta,
+            alv: alv,
+            toimittaja_id: toimittaja_id
+        });
+
+        res.redirect('/tarvikkeet');
+    } catch (virhe) {
+        console.error(virhe);
+        res.status(500).send("Virhe");
     }
 };

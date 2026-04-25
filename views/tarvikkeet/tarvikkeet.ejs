@@ -21,7 +21,8 @@
                         <div class="page-header">
                             <h2>Tarvikkeet</h2>
                             <button id="openModal" class="btn-primary">+ Lisää uusi tarvike</button>
-                            <button class="btn-primary" onclick="window.location.href='/tarvikkeet/arkistoidut'">Arkistoidut tarvikkeet</button>
+                            <button class="btn-primary"
+                                onclick="window.location.href='/tarvikkeet/arkistoidut'">Arkistoidut tarvikkeet</button>
                         </div>
 
                         <table class="data-table">
@@ -62,8 +63,8 @@
                                             <%= tarvike.toimittaja_nimi || 'Ei määritetty' %>
                                         </td>
                                         <td>
-                                            <form action="/tarvikkeet/arkistoi/<%= tarvike.tarvike_id %>"
-                                                method="POST" style="display: inline;"
+                                            <form action="/tarvikkeet/arkistoi/<%= tarvike.tarvike_id %>" method="POST"
+                                                style="display: inline;"
                                                 onsubmit="return confirm('Haluatko varmasti arkistoida tämän tarvikkeen?')">
                                                 <input type="hidden" name="tarvike_id"
                                                     value="<%= tarvike.tarvike_id %>">
@@ -88,16 +89,39 @@
                                             <input type="text" name="nimi" required>
                                         </div>
                                         <div class="form-group">
-                                            <label>Osoite</label>
-                                            <input type="text" name="osoite" required>
+                                            <label>Merkki</label>
+                                            <input type="text" name="merkki" required>
                                         </div>
                                         <div class="form-group">
-                                            <label>Sähköposti</label>
-                                            <input type="email" name="email" required>
+                                            <label>Yksikkö</label>
+                                            <input type="text" name="yksikko" required>
                                         </div>
                                         <div class="form-group">
-                                            <label>Puhelinnumero</label>
-                                            <input type="text" name="puhelinnumero" required>
+                                            <label>Saldo</label>
+                                            <input type="text" name="saldo" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Sisäänostohinta</label>
+                                            <input type="text" name="sisäänostohinta" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Myyntihinta</label>
+                                            <input type="text" name="myyntihinta" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Alv</label>
+                                            <input type="text" name="alv" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Toimittaja</label>
+                                            <select name="toimittaja_id" id="toimittajaSelect" required>
+                                                <option value="" disabled selected>Valitse toimittaja...</option>
+                                                <% (locals.toimittaja || []).forEach(toimittaja=> { %>
+                                                    <option value="<%= toimittaja.toimittaja_id %>">
+                                                        <%= toimittaja.nimi %>
+                                                    </option>
+                                                    <% }) %>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="form-actions">

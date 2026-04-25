@@ -18,7 +18,7 @@ export async function getAll(): Promise<Tarvike[]> {
   const { rows } = await pool.query<Tarvike>(`
     SELECT tarvike.*, toimittaja.nimi AS toimittaja_nimi
     FROM tarvike
-    JOIN toimittaja ON tarvike.toimittaja_id = toimittaja.toimittaja_id
+    LEFT JOIN toimittaja ON tarvike.toimittaja_id = toimittaja.toimittaja_id
   `);
   return rows;
 }
